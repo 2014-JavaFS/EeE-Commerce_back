@@ -1,4 +1,4 @@
-# EeE-Commerce
+# EeE-Commerce_back
 Team 3 (tentative name) Ee E-Commerce
 
 E-Commerce app where we only sell things shaped like the letter ‘E’ or ‘e’
