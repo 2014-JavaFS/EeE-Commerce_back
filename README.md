@@ -54,3 +54,11 @@ Challenges
   - (MUST be approved by Trainer first) Find a free API to integrate with your project, establishing a User Story appropriate to your application.
 
 ![ERD](p1ERD.png "Ee ERD")
+
+## Contributors:
+- Amsal Kassam
+- Arjun Ramsinghani
+- Connie Angeley
+- Ruben Fitch
+- Miguel Helguero
+
