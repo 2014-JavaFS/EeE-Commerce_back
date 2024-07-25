@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class Cart {
 
     @EmbeddedId
-    @Column(unique = true, nullable = false)
     private CartId id;
+    @Column(columnDefinition = "integer default 1 check (count > 0)")
     private int count;
 }
