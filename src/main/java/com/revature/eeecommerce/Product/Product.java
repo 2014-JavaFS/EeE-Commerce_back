@@ -25,4 +25,6 @@ public class Product {
     @Column(nullable = false)
     private String name;
     private String description;
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private int quantity;
 }
