@@ -1,40 +1,18 @@
 package com.revature.eeecommerce.OrderItem;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name="Order-Items")
 public class OrderItem {
-    private int orderId;
-    private int productId;
+    @EmbeddedId
+    private OrderItemId orderItemId;
+    @Column(columnDefinition = "integer default 1 check (count > 0)")
     private int count;
-
-    public OrderItem(){}
-
-    public OrderItem(int orderId, int productId, int count){
-        this.orderId = orderId;
-        this.productId = productId;
-        this.count = count;
-    }
-
-    public int getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
-
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
 }
-
