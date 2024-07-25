@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author Arjun Ramsinghani
- * This is a model of the Product
+ * This is a model of the Product.
  */
 
 @Data

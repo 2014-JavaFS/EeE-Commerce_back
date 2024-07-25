@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author Arjun Ramsinghani
+ * The Repository will use Jpa Repository to use its methods for database connections.
  */
 
 @Repository
