@@ -1,4 +1,4 @@
-# EeE-Commerce_front
+# EeE-Commerce_back
 Team 3 (tentative name) Ee E-Commerce
 
 E-Commerce app where we only sell things shaped like the letter ‘E’ or ‘e’
@@ -60,3 +60,4 @@ Challenges
 - Ruben Fitch
 - Miguel Helguero
 
+![ERD](p1ERD.PNG "ERD")
