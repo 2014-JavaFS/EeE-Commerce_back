@@ -13,9 +13,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "carts")
 public class Cart {
 
+    @EmbeddedId
     @Column(unique = true, nullable = false)
-    private int userId;
-    @Column(unique = true, nullable = false)
-    private int productId;
+    private CartId id;
     private int count;
 }
