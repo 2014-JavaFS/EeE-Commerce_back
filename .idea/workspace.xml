@@ -5,11 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0b73738b-5a58-4e34-bd05-5d4d2b7baf85" name="Changes" comment="Created Management Class and annotated all neccessary files, Wrote author annotation on Product files">
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Cart/Cart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Cart/Cart.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Order/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Order/Order.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/revature/eeecommerce/EeECommerceApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/revature/eeecommerce/EeECommerceApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/EeECommerceManagementApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/ProductRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/ProductService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/revature/eeecommerce/EeECommerceApplicationTests.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,11 +60,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Spring Boot.EeecommerceApplication" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
