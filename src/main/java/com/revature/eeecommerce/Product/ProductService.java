@@ -1,6 +1,12 @@
 package com.revature.eeecommerce.Product;
 
+import com.revature.eeecommerce.util.exceptions.DataNotFoundException;
+import com.revature.eeecommerce.util.exceptions.InvalidInputException;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /** SERVICE CLASS DOCUMENTATION
  * @author Arjun Ramsinghani
@@ -10,8 +16,56 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
-    // find all products
-    // save products
+    private ProductRepository productRepository;
+
+    @Autowired
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
     // remove products by an id (BIG MAYBE)
-    // calculate price
+
+    public List<Product> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+
+        if (products.isEmpty()) {
+            return null;
+        }
+
+        else {
+            return products;
+        }
+    }
+
+    public Product findById(int product_id) {
+        Product foundProduct = productRepository.findById(product_id).orElseThrow(() -> new DataNotFoundException("No product with the ID: " + product_id));
+        return foundProduct;
+    }
+
+    public Product createProduct(Product newProduct) {
+        return productRepository.save(newProduct);
+    }
+
+    @Transactional
+    public boolean updateProduct(Product updateProduct) {
+        Product foundProduct = productRepository.findById(updateProduct.getProduct_id()).orElseThrow(() -> new DataNotFoundException("No product with the ID: " + updateProduct.getProduct_id()));
+
+        if (foundProduct == null) {
+            return false;
+        }
+
+        productRepository.saveAndFlush(updateProduct);
+        return true;
+    }
+
+    public boolean deleteProduct(Product removeProduct) {
+        Product foundProduct = productRepository.findById(removeProduct.getProduct_id()).orElseThrow(() -> new DataNotFoundException("No product with the ID: " + removeProduct.getProduct_id()));
+
+        if (foundProduct == null) {
+            return false;
+        }
+
+        productRepository.delete(foundProduct);
+        return true;
+    }
 }
