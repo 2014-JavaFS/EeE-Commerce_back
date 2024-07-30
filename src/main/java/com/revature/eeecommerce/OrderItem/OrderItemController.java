@@ -50,5 +50,4 @@ public class OrderItemController {
         orderItemService.update(orderItem);
         return ResponseEntity.noContent().build();
     }
-
 }

@@ -4,18 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0b73738b-5a58-4e34-bd05-5d4d2b7baf85" name="Changes" comment="Created Management Class and annotated all neccessary files, Wrote author annotation on Product files">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/EeECommerceManagementApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItemController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItemRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItemService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItemService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/Product.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/revature/eeecommerce/EeecommerceApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/revature/eeecommerce/EeecommerceApplicationTests.java" afterDir="false" />
-    </list>
+    <list default="true" id="0b73738b-5a58-4e34-bd05-5d4d2b7baf85" name="Changes" comment="Created Management Class and annotated all neccessary files, Wrote author annotation on Product files" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
