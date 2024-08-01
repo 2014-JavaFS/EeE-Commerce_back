@@ -16,7 +16,7 @@ import lombok.*;
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int orderItemID;
+    private int orderItemId;
 
     @ManyToOne
     @NotNull

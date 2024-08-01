@@ -1,14 +1,14 @@
 package com.revature.eeecommerce.Product;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
+/** MODEL CLASS DOCUMENTATION
  * @author Arjun Ramsinghani
- * This is a model of the Product.
+ * The model class defines our data and what it should contain as well as implement the database via the Spring Boot annotations.
+ * All of our products that are created and sent to the database will have all attributes from this class.
  */
 
 @Data
@@ -26,6 +26,4 @@ public class Product {
     @Column(nullable = false)
     private String name;
     private String description;
-    @Column(nullable = false, columnDefinition = "integer default 0")
-    private int quantity;
 }
