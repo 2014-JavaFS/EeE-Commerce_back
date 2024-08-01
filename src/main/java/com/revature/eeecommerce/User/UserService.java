@@ -23,7 +23,7 @@ public class UserService {
      * @return User object if found, else null and throws AuthException
      */
     public User findByEmailAndPassword(String email, String password) throws AuthenticationException {
-        return userRepository.findbyEmailAndPassword(email, password).orElseThrow(() -> new AuthenticationException());
+        return userRepository.findByEmailAndPassword(email, password).orElseThrow(() -> new AuthenticationException());
     }
 
     public User create(User user) {
