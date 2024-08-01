@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0b73738b-5a58-4e34-bd05-5d4d2b7baf85" name="Changes" comment="Created Management Class and annotated all neccessary files, Wrote author annotation on Product files">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Order/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Order/Order.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItemController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItemRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItemService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/OrderItem/OrderItemService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/Product.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -43,19 +38,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.EeecommerceApplication.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "miguel__branch",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/arams/Documents/Revature/Training/Guided-Examples/airport-management-system",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.EeecommerceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;miguel__branch&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/arams/Documents/Revature/Training/Guided-Examples/airport-management-system&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="EeecommerceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="ams" />
