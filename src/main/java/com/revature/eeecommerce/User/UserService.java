@@ -35,7 +35,7 @@ public class UserService {
     }
 
     public User findById(int id)throws RuntimeException {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Nothing in the database with ID of " + id));
+        return userRepository.findByUserId(id).orElseThrow(() -> new RuntimeException("Nothing in the database with ID of " + id));
     }
 
     public boolean update(User user) {
