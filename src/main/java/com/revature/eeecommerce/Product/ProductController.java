@@ -2,10 +2,12 @@ package com.revature.eeecommerce.Product;
 
 import com.revature.eeecommerce.util.exceptions.DataNotFoundException;
 import com.revature.eeecommerce.util.exceptions.UnauthorizedException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 /** CONTROLLER CLASS DOCUMENTATION
@@ -38,7 +40,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable int id) {
+    public ResponseEntity<Product> getProductById(@Valid @PathVariable int id) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.findById(id));
     }
 
@@ -52,24 +54,31 @@ public class ProductController {
     }
 
     @PatchMapping
-    public ResponseEntity<Boolean> patchUpdateProduct(@RequestBody Product updatedProduct) {
+    public ResponseEntity<Boolean> patchUpdateProduct(@Valid @RequestBody Product updatedProduct, @RequestHeader String userType) {
+        if (!userType.equals("EMPLOYEE")) {
+            throw new UnauthorizedException("You are not logged in as a Seller");
+        }
+
         boolean updateProduct = productService.updateProduct(updatedProduct);
 
         if (updateProduct == false) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(updateProduct);
-    }
-
-    public ResponseEntity<Boolean> deleteProduct(@RequestBody Product deletedProduct) {
-        try {
-            productService.deleteProduct(deletedProduct);
-            return ResponseEntity.status(HttpStatus.OK).body(productService.deleteProduct(deletedProduct));
-        }
-
-        catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
         }
+
+        return ResponseEntity.status(HttpStatus.OK).body(true);
+    }
+
+    public ResponseEntity<Boolean> deleteProduct(@Valid @RequestBody Product deletedProduct, @RequestHeader String userType) {
+        if (!userType.equals("EMPLOYEE")) {
+            throw new UnauthorizedException("You are not logged in as a Seller");
+        }
+
+        boolean deleteProduct = productService.deleteProduct(deletedProduct);
+
+        if (deleteProduct == false) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(true);
     }
 }
