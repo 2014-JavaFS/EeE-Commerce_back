@@ -1,6 +1,5 @@
 package com.revature.eeecommerce;
 
-import com.revature.eeecommerce.Product.ProductController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class EeecommerceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ProductController.class, args);
+		SpringApplication.run(EeecommerceApplication.class, args);
 	}
 
 }

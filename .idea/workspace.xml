@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0b73738b-5a58-4e34-bd05-5d4d2b7baf85" name="Changes" comment="">
+    <list default="true" id="0b73738b-5a58-4e34-bd05-5d4d2b7baf85" name="Changes" comment="Updated product validation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/Product.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/Product/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/EeecommerceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/revature/eeecommerce/EeecommerceApplication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,13 +87,21 @@
       <option name="project" value="LOCAL" />
       <updated>1722289414263</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Updated product validation">
+      <created>1722545019920</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1722545019920</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Created Management Class and annotated all neccessary files, Wrote author annotation on Product files" />
     <MESSAGE value="Gathered use cases for Products and labeled which methods to use from Repositories, deleted unneeded files after merge from main" />
     <MESSAGE value="Completed get all products, get individual product, create new product, update product, delete product in controller and service layer, added new exceptions as needed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Completed get all products, get individual product, create new product, update product, delete product in controller and service layer, added new exceptions as needed" />
+    <MESSAGE value="Updated product validation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated product validation" />
   </component>
 </project>
