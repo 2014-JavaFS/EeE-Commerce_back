@@ -2,8 +2,9 @@ package com.revature.eeecommerce.OrderItem;
 
 import com.revature.eeecommerce.Order.Order;
 import com.revature.eeecommerce.OrderItem.dtos.OrderItemDTO;
-import com.revature.eeecommerce.OrderItem.dtos.OrderItemPatchDTO;
+import com.revature.eeecommerce.OrderItem.dtos.OrderItemDTONoId;
 import com.revature.eeecommerce.Product.Product;
+import com.revature.eeecommerce.util.exceptions.OrderItemNotFoundException;
 import com.revature.eeecommerce.util.exceptions.UnauthorizedException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/orderItems")
@@ -24,32 +26,31 @@ public class OrderItemController {
 
     }
 
-
-    /*
-        works with request body(if database has an Order row w/order_id = 1 and Product row w/product_id = 1:
-    {
-      "order": {
-        "orderId": 1
-      },
-      "product": {
-        "product_id": 1
-      },
-      "count": 3
-    }
-     */
-
     /**
      * Takes in an OrderItem as a json and returns a response with an OrderItemDTO object as the json response body.
      * Requires there to be an entry in the Order table and an entry in the Product table with the same order_id and product_id as in the request body.
-     * @param orderItem - OrderItem json object with an existing order_id and product_id
+     * @param postDTO - OrderItemDTO json object with an existing order_id and product_id
      * @return orderItemDTO - OrderItemDTO with only orderItemId, orderId, product_id and count instead of Order and Product objects in place of the id's
      */
     @PostMapping
-    private ResponseEntity<OrderItemDTO> postNewOrderItem(@Valid @RequestBody OrderItem orderItem, @RequestHeader String userType) throws UnauthorizedException {
+    private ResponseEntity<OrderItemDTO> postNewOrderItem(@Valid @RequestBody OrderItemDTONoId postDTO, @RequestHeader String userType) throws UnauthorizedException {
         if (!userType.equals("EMPLOYEE")) {
             throw new UnauthorizedException("You are not logged in as a Seller");
         }
-        OrderItem newOrderItem = orderItemService.create(orderItem);
+
+        Order order = new Order();
+        order.setOrderId(postDTO.getOrderId());
+
+        Product product = new Product();
+        product.setProduct_id(postDTO.getProduct_id());
+
+        OrderItem newOrderItem = new OrderItem();
+        newOrderItem.setOrder(order);
+        newOrderItem.setProduct(product);
+        newOrderItem.setCount(postDTO.getCount());
+
+
+        newOrderItem = orderItemService.create(newOrderItem);
         OrderItemDTO orderItemDTO = mapToDTO(newOrderItem);
 
         return ResponseEntity
@@ -72,18 +73,34 @@ public class OrderItemController {
     }
 
     @GetMapping
-    private ResponseEntity<List<OrderItem>> findAll(){
-        return ResponseEntity.ok(orderItemService.findAll());
+    private ResponseEntity<List<OrderItemDTO>> findAll(){
+        List<OrderItem> orderItems = orderItemService.findAll();
+        List<OrderItemDTO> orderItemDTOs = orderItems.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(orderItemDTOs);
     }
 
     @GetMapping("/{orderItemId}")
-    private ResponseEntity<OrderItem> getOrderItem(@PathVariable int orderItemId){
-        return ResponseEntity.ok(orderItemService.findById(orderItemId));
+    private ResponseEntity<?> getOrderItem(@PathVariable int orderItemId){
+        try {
+            OrderItem orderItem = orderItemService.findById(orderItemId);
+            OrderItemDTO orderItemDTO = mapToDTO(orderItem);
+            return ResponseEntity.ok(orderItemDTO);
+        } catch (OrderItemNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @GetMapping("/{orderId}/{productId}")
-    private ResponseEntity<OrderItem> findByOrderOrderIdAndProductProductId(@PathVariable int orderId, @PathVariable int productId){
-        return ResponseEntity.ok(orderItemService.findByOrderIdAndProductId(orderId, productId));
+    private ResponseEntity<?> findByOrderOrderIdAndProductProductId(@PathVariable int orderId, @PathVariable int productId){
+        try{
+            OrderItem orderItem = orderItemService.findByOrderIdAndProductId(orderId, productId);
+            OrderItemDTO orderItemDTO = mapToDTO(orderItem);
+            return ResponseEntity.ok(orderItemDTO);
+        } catch(OrderItemNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{orderItemId}")
@@ -120,42 +137,38 @@ public class OrderItemController {
 //    }
 
     @PatchMapping("/{orderItemId}")
-    private ResponseEntity<OrderItemDTO> patchUpdateOrderItem(@Valid @RequestBody OrderItemPatchDTO patchDTO, @PathVariable int orderItemId, @RequestHeader String userType) throws UnauthorizedException {
+    private ResponseEntity<?> patchUpdateOrderItem(@Valid @RequestBody OrderItemDTONoId patchDTO, @PathVariable int orderItemId, @RequestHeader String userType) throws UnauthorizedException {
         if (!userType.equals("EMPLOYEE")) {
             throw new UnauthorizedException("You are not logged in as a Seller");
         }
 
-        OrderItem existingOrderItem = orderItemService.findById(orderItemId);
+        try {
+            OrderItem existingOrderItem = orderItemService.findById(orderItemId);
+            if(patchDTO.getOrderId() != null) {
+                Order order = new Order();
+                order.setOrderId(patchDTO.getOrderId());
+                existingOrderItem.setOrder(order);
+            }
 
-        if(patchDTO.getOrderId() != null) {
-            Order order = new Order();
-            order.setOrderId(patchDTO.getOrderId());
-            existingOrderItem.setOrder(order);
+            if(patchDTO.getProduct_id() != null) {
+                Product product = new Product();
+                product.setProduct_id(patchDTO.getProduct_id());
+                existingOrderItem.setProduct(product);
+            }
+
+            if(patchDTO.getCount() != null) {
+                existingOrderItem.setCount(patchDTO.getCount());
+            }
+
+            OrderItem updatedOrderItem = orderItemService.update(existingOrderItem);
+
+            OrderItemDTO orderItemDTO = mapToDTO(updatedOrderItem);
+
+            return ResponseEntity.ok(orderItemDTO);
+        } catch(OrderItemNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
-
-        if(patchDTO.getProduct_id() != null) {
-            Product product = new Product();
-            product.setProduct_id(patchDTO.getProduct_id());
-            existingOrderItem.setProduct(product);
-        }
-
-        if(patchDTO.getCount() != null) {
-            existingOrderItem.setCount(patchDTO.getCount());
-        }
-
-        OrderItem updatedOrderItem = orderItemService.update(existingOrderItem);
-
-        OrderItemDTO orderItemDTO = mapToPatchDTO(updatedOrderItem);
-
-        return ResponseEntity.ok(orderItemDTO);
     }
 
-    private OrderItemDTO mapToPatchDTO(OrderItem originalOrderItem){
-        return new OrderItemDTO(
-                originalOrderItem.getOrderItemId(),
-                originalOrderItem.getOrder().getOrderId(),
-                originalOrderItem.getProduct().getProduct_id(),
-                originalOrderItem.getCount()
-        );
-    }
+
 }

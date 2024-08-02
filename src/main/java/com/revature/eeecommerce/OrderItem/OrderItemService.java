@@ -23,14 +23,16 @@ public class OrderItemService{
         return orderItemRepository.save(newOrderItem);
     }
 
-    @SneakyThrows
-    public OrderItem findById(int orderItemId) {
+    public OrderItem findById(int orderItemId) throws OrderItemNotFoundException{
         return orderItemRepository.findById(orderItemId).orElseThrow(() -> new OrderItemNotFoundException("Nothing in the database with ID of " + orderItemId));
     }
 
 
-    public OrderItem findByOrderIdAndProductId(int orderId, int productId){
-        return orderItemRepository.findByOrderIdAndProductId(orderId, productId);
+    public OrderItem findByOrderIdAndProductId(int orderId, int productId) throws OrderItemNotFoundException{
+        OrderItem orderItem = orderItemRepository.findByOrderIdAndProductId(orderId, productId);
+        if(orderItem == null) throw new OrderItemNotFoundException("No order item found with that order id and product id");
+
+        return orderItem;
     }
 
     public boolean delete(int orderItemId) {

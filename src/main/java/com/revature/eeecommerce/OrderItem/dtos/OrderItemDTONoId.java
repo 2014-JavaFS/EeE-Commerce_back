@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class OrderItemPatchDTO {
+public class OrderItemDTONoId {
     private Integer orderId;
     private Integer product_id;
     private Integer count;
