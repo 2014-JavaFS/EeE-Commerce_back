@@ -1,7 +1,10 @@
 package com.revature.eeecommerce.OrderItem;
 
 import com.revature.eeecommerce.Order.Order;
+import com.revature.eeecommerce.OrderItem.dtos.OrderItemDTO;
+import com.revature.eeecommerce.OrderItem.dtos.OrderItemPatchDTO;
 import com.revature.eeecommerce.Product.Product;
+import com.revature.eeecommerce.util.exceptions.UnauthorizedException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,7 +45,10 @@ public class OrderItemController {
      * @return orderItemDTO - OrderItemDTO with only orderItemId, orderId, product_id and count instead of Order and Product objects in place of the id's
      */
     @PostMapping
-    private ResponseEntity<OrderItemDTO> postNewOrderItem(@Valid @RequestBody OrderItem orderItem){
+    private ResponseEntity<OrderItemDTO> postNewOrderItem(@Valid @RequestBody OrderItem orderItem, @RequestHeader String userType) throws UnauthorizedException {
+        if (!userType.equals("EMPLOYEE")) {
+            throw new UnauthorizedException("You are not logged in as a Seller");
+        }
         OrderItem newOrderItem = orderItemService.create(orderItem);
         OrderItemDTO orderItemDTO = mapToDTO(newOrderItem);
 
@@ -75,39 +81,49 @@ public class OrderItemController {
         return ResponseEntity.ok(orderItemService.findById(orderItemId));
     }
 
-    // TODO: set up method
-//    @GetMapping("/{orderId}/{productId}")
-//    private ResponseEntity<OrderItem> findByOrderOrderIdAndProductProductId(@PathVariable int orderId, @PathVariable int productId){
-//        return ResponseEntity.ok(orderItemService.findByOrderOrderIdAndProductProductId(orderId, productId));
-//    }
+    @GetMapping("/{orderId}/{productId}")
+    private ResponseEntity<OrderItem> findByOrderOrderIdAndProductProductId(@PathVariable int orderId, @PathVariable int productId){
+        return ResponseEntity.ok(orderItemService.findByOrderIdAndProductId(orderId, productId));
+    }
 
     @DeleteMapping("/{orderItemId}")
-    private ResponseEntity<Void> deleteOrderItem(@PathVariable int orderItemId){
+    private ResponseEntity<Void> deleteOrderItem(@PathVariable int orderItemId, @RequestHeader String userType) throws UnauthorizedException {
+        if (!userType.equals("EMPLOYEE")) {
+            throw new UnauthorizedException("You are not logged in as a Seller");
+        }
+
         orderItemService.delete(orderItemId);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{orderItemId}")
-    private ResponseEntity<OrderItemDTO> putUpdateOrderItem(@Valid @RequestBody OrderItemDTO orderItemDTO, @PathVariable int orderItemId){
-        OrderItem existingOrderItem = orderItemService.findById(orderItemId);
-
-        Order order = new Order();
-        order.setOrderId(orderItemId);
-        existingOrderItem.setOrder(order);
-
-        Product product = new Product();
-        product.setProduct_id(orderItemDTO.getProduct_id());
-        existingOrderItem.setProduct(product);
-
-        existingOrderItem.setCount(orderItemDTO.getCount());
-
-        OrderItem updatedOrderItem = orderItemService.update(existingOrderItem);
-
-        return ResponseEntity.ok(mapToDTO(updatedOrderItem));
-    }
+//    @PutMapping("/{orderItemId}")
+//    private ResponseEntity<OrderItemDTO> putUpdateOrderItem(@Valid @RequestBody OrderItemDTO orderItemDTO, @PathVariable int orderItemId, @RequestHeader String userType) throws UnauthorizedException {
+//        if (!userType.equals("EMPLOYEE")) {
+//            throw new UnauthorizedException("You are not logged in as a Seller");
+//        }
+//
+//        OrderItem existingOrderItem = orderItemService.findById(orderItemId);
+//
+//        Order order = new Order();
+//        order.setOrderId(orderItemId);
+//        existingOrderItem.setOrder(order);
+//
+//        Product product = new Product();
+//        product.setProduct_id(orderItemDTO.getProduct_id());
+//        existingOrderItem.setProduct(product);
+//
+//        existingOrderItem.setCount(orderItemDTO.getCount());
+//
+//        OrderItem updatedOrderItem = orderItemService.update(existingOrderItem);
+//
+//        return ResponseEntity.ok(mapToDTO(updatedOrderItem));
+//    }
 
     @PatchMapping("/{orderItemId}")
-    private ResponseEntity<OrderItemDTO> patchUpdateOrderItem(@Valid @RequestBody OrderItemPatchDTO patchDTO, @PathVariable int orderItemId){
+    private ResponseEntity<OrderItemDTO> patchUpdateOrderItem(@Valid @RequestBody OrderItemPatchDTO patchDTO, @PathVariable int orderItemId, @RequestHeader String userType) throws UnauthorizedException {
+        if (!userType.equals("EMPLOYEE")) {
+            throw new UnauthorizedException("You are not logged in as a Seller");
+        }
 
         OrderItem existingOrderItem = orderItemService.findById(orderItemId);
 

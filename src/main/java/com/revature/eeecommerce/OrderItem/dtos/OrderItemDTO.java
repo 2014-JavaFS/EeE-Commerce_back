@@ -1,4 +1,4 @@
-package com.revature.eeecommerce.OrderItem;
+package com.revature.eeecommerce.OrderItem.dtos;
 
 import lombok.*;
 

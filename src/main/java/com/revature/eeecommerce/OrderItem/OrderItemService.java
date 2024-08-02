@@ -28,10 +28,10 @@ public class OrderItemService{
         return orderItemRepository.findById(orderItemId).orElseThrow(() -> new OrderItemNotFoundException("Nothing in the database with ID of " + orderItemId));
     }
 
-//    @SneakyThrows
-//    public OrderItem findByOrderOrderIdAndProductProductId(int orderId, int productId){
-//        return orderItemRepository.findByOrderOrderIdAndProductProductId(orderId, productId).orElseThrow(() -> new OrderItemNotFoundException("No order item found with that order id and product id."));
-//    }
+
+    public OrderItem findByOrderIdAndProductId(int orderId, int productId){
+        return orderItemRepository.findByOrderIdAndProductId(orderId, productId);
+    }
 
     public boolean delete(int orderItemId) {
         orderItemRepository.deleteById(orderItemId);
