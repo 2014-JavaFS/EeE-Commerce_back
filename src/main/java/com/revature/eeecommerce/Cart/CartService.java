@@ -1,12 +1,9 @@
 package com.revature.eeecommerce.Cart;
 
-import com.revature.eeecommerce.Product.Product;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
