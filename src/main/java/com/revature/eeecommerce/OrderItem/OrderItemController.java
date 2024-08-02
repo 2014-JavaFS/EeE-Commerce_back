@@ -35,6 +35,9 @@ public class OrderItemController {
     @PostMapping
     private ResponseEntity<?> postNewOrderItem(@Valid @RequestBody OrderItemDTO postDTO, @RequestHeader String userType){
         try {
+            if (!userType.equals("EMPLOYEE")) {
+                throw new UnauthorizedException("You are not logged in as a Seller");
+            }
 
             Order order = new Order();
             order.setOrderId(postDTO.getOrderId());
@@ -105,6 +108,18 @@ public class OrderItemController {
     }
 
 
+    @GetMapping("/order/{orderId}")
+    private ResponseEntity<?> findAllByOrderId(@PathVariable int orderId){
+        try{
+            List<OrderItem> orderItems = orderItemService.findAllByOrderId(orderId);
+            List<OrderItemDTO> orderItemDTOs = orderItems.stream()
+                    .map(this::mapToDTO)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(orderItemDTOs);
+        } catch(OrderItemNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
     /**
      * Returns the order-item entry with the corresponding order_id and product_id as an OrderItemDTO object, or throws an exception
      * if no entry with those values were found.

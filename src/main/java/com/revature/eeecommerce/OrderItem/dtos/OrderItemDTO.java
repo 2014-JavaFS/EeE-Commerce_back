@@ -8,8 +8,8 @@ import lombok.*;
 @Getter
 @Setter
 public class OrderItemDTO {
-    private int orderItemId;
-    private int orderId;
-    private int product_id;
-    private int count;
+    private Integer orderItemId;
+    private Integer orderId;
+    private Integer product_id;
+    private Integer count;
 }

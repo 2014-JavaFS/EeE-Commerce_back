@@ -29,6 +29,12 @@ public class OrderItemService{
     }
 
 
+    public List<OrderItem> findAllByOrderId(int orderId) throws OrderItemNotFoundException {
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(orderId);
+        if(orderItems == null) throw new OrderItemNotFoundException("No order item found with that order id and product id");
+
+        return orderItems;
+    }
     public OrderItem findByOrderIdAndProductId(int orderId, int productId) throws OrderItemNotFoundException{
         OrderItem orderItem = orderItemRepository.findByOrderIdAndProductId(orderId, productId);
         if(orderItem == null) throw new OrderItemNotFoundException("No order item found with that order id and product id");
