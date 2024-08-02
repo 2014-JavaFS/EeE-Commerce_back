@@ -1,5 +1,7 @@
 package com.revature.eeecommerce.OrderItem;
 
+import com.revature.eeecommerce.Order.Order;
+import com.revature.eeecommerce.Product.Product;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,7 +56,7 @@ public class OrderItemController {
      * @param orderItem - OrderItem object with Order and Product objects
      * @return - OrderItemDTO object containing orderItemId, orderId, product_id, and count
      */
-    private OrderItemDTO mapToDTO(OrderItem orderItem){
+    private OrderItemDTO mapToDTO(OrderItem orderItem) {
         return new OrderItemDTO(
                 orderItem.getOrderItemId(),
                 orderItem.getOrder().getOrderId(),
@@ -85,9 +87,59 @@ public class OrderItemController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
-    private ResponseEntity<OrderItem> putUpdateOrderItem(@Valid @RequestBody OrderItem orderItem){
-        orderItemService.update(orderItem);
-        return ResponseEntity.ok(orderItem);
+    @PutMapping("/{orderItemId}")
+    private ResponseEntity<OrderItemDTO> putUpdateOrderItem(@Valid @RequestBody OrderItemDTO orderItemDTO, @PathVariable int orderItemId){
+        OrderItem existingOrderItem = orderItemService.findById(orderItemId);
+
+        Order order = new Order();
+        order.setOrderId(orderItemId);
+        existingOrderItem.setOrder(order);
+
+        Product product = new Product();
+        product.setProduct_id(orderItemDTO.getProduct_id());
+        existingOrderItem.setProduct(product);
+
+        existingOrderItem.setCount(orderItemDTO.getCount());
+
+        OrderItem updatedOrderItem = orderItemService.update(existingOrderItem);
+
+        return ResponseEntity.ok(mapToDTO(updatedOrderItem));
+    }
+
+    @PatchMapping("/{orderItemId}")
+    private ResponseEntity<OrderItemDTO> patchUpdateOrderItem(@Valid @RequestBody OrderItemPatchDTO patchDTO, @PathVariable int orderItemId){
+
+        OrderItem existingOrderItem = orderItemService.findById(orderItemId);
+
+        if(patchDTO.getOrderId() != null) {
+            Order order = new Order();
+            order.setOrderId(patchDTO.getOrderId());
+            existingOrderItem.setOrder(order);
+        }
+
+        if(patchDTO.getProduct_id() != null) {
+            Product product = new Product();
+            product.setProduct_id(patchDTO.getProduct_id());
+            existingOrderItem.setProduct(product);
+        }
+
+        if(patchDTO.getCount() != null) {
+            existingOrderItem.setCount(patchDTO.getCount());
+        }
+
+        OrderItem updatedOrderItem = orderItemService.update(existingOrderItem);
+
+        OrderItemDTO orderItemDTO = mapToPatchDTO(updatedOrderItem);
+
+        return ResponseEntity.ok(orderItemDTO);
+    }
+
+    private OrderItemDTO mapToPatchDTO(OrderItem originalOrderItem){
+        return new OrderItemDTO(
+                originalOrderItem.getOrderItemId(),
+                originalOrderItem.getOrder().getOrderId(),
+                originalOrderItem.getProduct().getProduct_id(),
+                originalOrderItem.getCount()
+        );
     }
 }

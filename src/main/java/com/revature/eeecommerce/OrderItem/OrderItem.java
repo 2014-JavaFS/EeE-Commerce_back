@@ -31,4 +31,5 @@ public class OrderItem {
     @Column(columnDefinition = "integer default 1 check (count > 0)", nullable = false)
     @NotNull
     private int count;
+
 }

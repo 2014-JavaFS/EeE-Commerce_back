@@ -40,10 +40,17 @@ public class OrderItemService{
 
 
     @SneakyThrows
-    public boolean update(OrderItem orderItem) {
-        if(!orderItemRepository.existsById(orderItem.getOrderItemId())) throw new OrderItemNotFoundException("No order item found with an id of "+orderItem);
-        orderItemRepository.save(orderItem);
-        return true;
+    public OrderItem update(OrderItem orderItem) {
+        OrderItem existingOrderitem = orderItemRepository.findById(orderItem.getOrderItemId()).orElseThrow(()-> new OrderItemNotFoundException("No order item found with an id of "+orderItem));
+        if(orderItem.getOrder() != null) existingOrderitem.setOrder(orderItem.getOrder());
+
+        if(orderItem.getProduct() != null) existingOrderitem.setProduct(orderItem.getProduct());
+
+        if(orderItem.getCount() > 0) existingOrderitem.setCount(orderItem.getCount());
+
+
+
+        return orderItemRepository.save(existingOrderitem);
     }
 
 
