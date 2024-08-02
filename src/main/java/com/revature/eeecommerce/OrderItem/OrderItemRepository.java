@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface OrderItemRepository extends JpaRepository<OrderItem, Integer> {
     @Query("SELECT oi FROM OrderItem oi WHERE oi.order.orderId = :orderId AND oi.product.product_id = :productId")
     OrderItem findByOrderIdAndProductId(@Param("orderId") int orderId,@Param("productId") int productId);
+
 }

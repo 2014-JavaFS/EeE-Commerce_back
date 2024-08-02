@@ -33,29 +33,33 @@ public class OrderItemController {
      * @return orderItemDTO - OrderItemDTO with only orderItemId, orderId, product_id and count instead of Order and Product objects in place of the id's
      */
     @PostMapping
-    private ResponseEntity<OrderItemDTO> postNewOrderItem(@Valid @RequestBody OrderItemDTONoId postDTO, @RequestHeader String userType) throws UnauthorizedException {
-        if (!userType.equals("EMPLOYEE")) {
-            throw new UnauthorizedException("You are not logged in as a Seller");
+    private ResponseEntity<?> postNewOrderItem(@Valid @RequestBody OrderItemDTONoId postDTO, @RequestHeader String userType){
+        try {
+            if (!userType.equals("EMPLOYEE")) {
+                throw new UnauthorizedException("You are not logged in as a Seller");
+            }
+
+            Order order = new Order();
+            order.setOrderId(postDTO.getOrderId());
+
+            Product product = new Product();
+            product.setProduct_id(postDTO.getProduct_id());
+
+            OrderItem newOrderItem = new OrderItem();
+            newOrderItem.setOrder(order);
+            newOrderItem.setProduct(product);
+            newOrderItem.setCount(postDTO.getCount());
+
+
+            newOrderItem = orderItemService.create(newOrderItem);
+            OrderItemDTO orderItemDTO = mapToDTO(newOrderItem);
+
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(orderItemDTO);
+        } catch(UnauthorizedException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
-
-        Order order = new Order();
-        order.setOrderId(postDTO.getOrderId());
-
-        Product product = new Product();
-        product.setProduct_id(postDTO.getProduct_id());
-
-        OrderItem newOrderItem = new OrderItem();
-        newOrderItem.setOrder(order);
-        newOrderItem.setProduct(product);
-        newOrderItem.setCount(postDTO.getCount());
-
-
-        newOrderItem = orderItemService.create(newOrderItem);
-        OrderItemDTO orderItemDTO = mapToDTO(newOrderItem);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(orderItemDTO);
     }
 
     /**
@@ -72,6 +76,11 @@ public class OrderItemController {
         );
     }
 
+    /**
+     * Returns all entries in the order-items table as a List of OrderItemDTO objects, to show only column values instead of
+     * each order item's corresponding Order and Product objects in the response body.
+     * @return orderItemDTOs - List of each entry in the order-items table as an OrderItemDTO
+     */
     @GetMapping
     private ResponseEntity<List<OrderItemDTO>> findAll(){
         List<OrderItem> orderItems = orderItemService.findAll();
@@ -81,6 +90,12 @@ public class OrderItemController {
         return ResponseEntity.ok(orderItemDTOs);
     }
 
+    /**
+     *  Returns the order-item entry with the corresponding order_item_id as an OrderItemDTO object, or throws an exception
+     *  if no entry with that order_item_id found.
+     * @param orderItemId - order_item_id of the entry we want to find in the order-items table.
+     * @return - returns the found orderItem in OrderItemDTO format, or a 404 status with a message if none found.
+     */
     @GetMapping("/{orderItemId}")
     private ResponseEntity<?> getOrderItem(@PathVariable int orderItemId){
         try {
@@ -92,6 +107,14 @@ public class OrderItemController {
         }
     }
 
+
+    /**
+     * Returns the order-item entry with the corresponding order_id and product_id as an OrderItemDTO object, or throws an exception
+     * if no entry with those values were found.
+     * @param orderId - order_id of the entry we want to find in the order-items table
+     * @param productId - product_id of the entry we want to find in the order-items table
+     * @return - returns the found orderItem in OrderItemDTO format, or a 404 status with a message if none found.
+     */
     @GetMapping("/{orderId}/{productId}")
     private ResponseEntity<?> findByOrderOrderIdAndProductProductId(@PathVariable int orderId, @PathVariable int productId){
         try{
@@ -103,46 +126,46 @@ public class OrderItemController {
         }
     }
 
-    @DeleteMapping("/{orderItemId}")
-    private ResponseEntity<Void> deleteOrderItem(@PathVariable int orderItemId, @RequestHeader String userType) throws UnauthorizedException {
-        if (!userType.equals("EMPLOYEE")) {
-            throw new UnauthorizedException("You are not logged in as a Seller");
-        }
 
-        orderItemService.delete(orderItemId);
-        return ResponseEntity.noContent().build();
+    /**
+     * Deletes the order-item entry with the corresponding order_item_id, or throws an exception if none found.
+     * @param orderItemId - order_item_id of the entry we want to delete in the order-items table.
+     * @param userType - String denoting if the logged-in user is a customer or employee
+     * @return - returns nothing if delete successful, or a 404 status with a message if the order-item entry was not found.
+     */
+    @DeleteMapping("/{orderItemId}")
+    private ResponseEntity<?> deleteOrderItem(@PathVariable int orderItemId, @RequestHeader String userType){
+        try {
+            if (!userType.equals("EMPLOYEE")) {
+                throw new UnauthorizedException("You are not logged in as a Seller");
+            }
+
+            orderItemService.delete(orderItemId);
+            return ResponseEntity.noContent().build();
+        } catch(UnauthorizedException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
 
-//    @PutMapping("/{orderItemId}")
-//    private ResponseEntity<OrderItemDTO> putUpdateOrderItem(@Valid @RequestBody OrderItemDTO orderItemDTO, @PathVariable int orderItemId, @RequestHeader String userType) throws UnauthorizedException {
-//        if (!userType.equals("EMPLOYEE")) {
-//            throw new UnauthorizedException("You are not logged in as a Seller");
-//        }
-//
-//        OrderItem existingOrderItem = orderItemService.findById(orderItemId);
-//
-//        Order order = new Order();
-//        order.setOrderId(orderItemId);
-//        existingOrderItem.setOrder(order);
-//
-//        Product product = new Product();
-//        product.setProduct_id(orderItemDTO.getProduct_id());
-//        existingOrderItem.setProduct(product);
-//
-//        existingOrderItem.setCount(orderItemDTO.getCount());
-//
-//        OrderItem updatedOrderItem = orderItemService.update(existingOrderItem);
-//
-//        return ResponseEntity.ok(mapToDTO(updatedOrderItem));
-//    }
-
+    /**
+     * Updates the order-item entry with the corresponding order_item_id with the values present in the request body and
+     * returns the updated orderItem as an OrderItemDTO, or throws an exception if logged-in user is not an employee
+     * or the order-item entry was not found.
+     * @param patchDTO - OrderItemDTONoId object with optional values for order_id, product_id, and count.
+     * @param orderItemId - order_item_id of the entry we want to update.
+     * @param userType - String indicating if the logged-in user is a customer or employee.
+     * @return - returns the updated order-item entry in OrderItemDTO format if patch successful, a or message if unsuccessful.
+     * @throws UnauthorizedException - thrown if userType is not 'EMPLOYEE'.
+     * @throws OrderItemNotFoundException - thrown if no order-item entry found with the corresponding order_item_id.
+     */
     @PatchMapping("/{orderItemId}")
     private ResponseEntity<?> patchUpdateOrderItem(@Valid @RequestBody OrderItemDTONoId patchDTO, @PathVariable int orderItemId, @RequestHeader String userType) throws UnauthorizedException {
-        if (!userType.equals("EMPLOYEE")) {
-            throw new UnauthorizedException("You are not logged in as a Seller");
-        }
-
+        // replacing values in the existing orderItem with any values included in the PATCH request
         try {
+            if (!userType.equals("EMPLOYEE")) {
+                throw new UnauthorizedException("You are not logged in as a Seller");
+            }
+
             OrderItem existingOrderItem = orderItemService.findById(orderItemId);
             if(patchDTO.getOrderId() != null) {
                 Order order = new Order();
@@ -162,11 +185,14 @@ public class OrderItemController {
 
             OrderItem updatedOrderItem = orderItemService.update(existingOrderItem);
 
+            // formatting updated orderItem into an orderItemDTO to only include orderId and product_id instead of an Order and Product
             OrderItemDTO orderItemDTO = mapToDTO(updatedOrderItem);
 
             return ResponseEntity.ok(orderItemDTO);
         } catch(OrderItemNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch(UnauthorizedException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 

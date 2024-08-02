@@ -1,6 +1,7 @@
 package com.revature.eeecommerce.OrderItem;
 
 import com.revature.eeecommerce.util.exceptions.OrderItemNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,9 +41,7 @@ public class OrderItemService{
         return true;
     }
 
-
-    @SneakyThrows
-    public OrderItem update(OrderItem orderItem) {
+    public OrderItem update(OrderItem orderItem) throws OrderItemNotFoundException{
         OrderItem existingOrderitem = orderItemRepository.findById(orderItem.getOrderItemId()).orElseThrow(()-> new OrderItemNotFoundException("No order item found with an id of "+orderItem));
         if(orderItem.getOrder() != null) existingOrderitem.setOrder(orderItem.getOrder());
 
