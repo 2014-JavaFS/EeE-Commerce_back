@@ -33,11 +33,8 @@ public class OrderItemController {
      * @return orderItemDTO - OrderItemDTO with only orderItemId, orderId, product_id and count instead of Order and Product objects in place of the id's
      */
     @PostMapping
-    private ResponseEntity<?> postNewOrderItem(@Valid @RequestBody OrderItemDTONoId postDTO, @RequestHeader String userType){
+    private ResponseEntity<?> postNewOrderItem(@Valid @RequestBody OrderItemDTO postDTO, @RequestHeader String userType){
         try {
-            if (!userType.equals("EMPLOYEE")) {
-                throw new UnauthorizedException("You are not logged in as a Seller");
-            }
 
             Order order = new Order();
             order.setOrderId(postDTO.getOrderId());
