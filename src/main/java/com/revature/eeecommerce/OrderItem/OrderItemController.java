@@ -2,7 +2,6 @@ package com.revature.eeecommerce.OrderItem;
 
 import com.revature.eeecommerce.Order.Order;
 import com.revature.eeecommerce.OrderItem.dtos.OrderItemDTO;
-import com.revature.eeecommerce.OrderItem.dtos.OrderItemDTONoId;
 import com.revature.eeecommerce.Product.Product;
 import com.revature.eeecommerce.util.exceptions.OrderItemNotFoundException;
 import com.revature.eeecommerce.util.exceptions.UnauthorizedException;
@@ -171,7 +170,7 @@ public class OrderItemController {
      * @throws OrderItemNotFoundException - thrown if no order-item entry found with the corresponding order_item_id.
      */
     @PatchMapping("/{orderItemId}")
-    private ResponseEntity<?> patchUpdateOrderItem(@Valid @RequestBody OrderItemDTONoId patchDTO, @PathVariable int orderItemId, @RequestHeader String userType) throws UnauthorizedException {
+    private ResponseEntity<?> patchUpdateOrderItem(@Valid @RequestBody OrderItemDTO patchDTO, @PathVariable int orderItemId, @RequestHeader String userType) throws UnauthorizedException {
         // replacing values in the existing orderItem with any values included in the PATCH request
         try {
             if (!userType.equals("EMPLOYEE")) {
