@@ -57,4 +57,14 @@ public class OrderService implements Serviceable<Order> {
         orderRepository.delete(order);
         return true;
     }
+
+    //TODO: Verify that this works
+    public List<Order> findAllById(int userId) {
+        List<Order> orders = orderRepository.findAllByUserUserId(userId);
+        if (orders.isEmpty()){
+            throw new DataNotFoundException("No orders with that userId was found");
+        } else {
+            return orders;
+        }
+    }
 }

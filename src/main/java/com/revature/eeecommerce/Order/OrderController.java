@@ -1,6 +1,9 @@
 package com.revature.eeecommerce.Order;
 
+import com.revature.eeecommerce.Cart.CartService;
+import com.revature.eeecommerce.OrderItem.OrderItemService;
 import com.revature.eeecommerce.util.exceptions.UnauthorizedException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,29 +15,38 @@ import java.util.List;
 @RequestMapping("/orders")
 public class OrderController {
     private final OrderService orderService;
+    private final CartService cartService;
+    private final OrderItemService orderItemService;
 
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, CartService cartService, OrderItemService orderItemService) {
         this.orderService = orderService;
+        this.cartService = cartService;
+        this.orderItemService = orderItemService;
     }
 
     @GetMapping
     public @ResponseBody List<Order> getAllOrders(){ return orderService.findAll(); }
 
     @PostMapping
-    public ResponseEntity<Order> postNewOrder(@RequestBody Order order, @RequestHeader String memberType){
+    public ResponseEntity<Order> checkout(@Valid @RequestBody Order order, @RequestHeader String userType, @RequestHeader int userId){
         //TODO: check this if statement for correct logic
-        if (!memberType.equals("CUSTOMER")) throw new UnauthorizedException("You are not logged in as a customer!");
+        if (!userType.equals("CUSTOMER")) throw new UnauthorizedException("You are not logged in as a customer!");
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.create(order));
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<Order> getOrderById(@PathVariable int id){
+    public ResponseEntity<Order> getOrderById(@PathVariable int id){
         return ResponseEntity.ok(orderService.findById(id));
     }
 
     @PutMapping
-    private ResponseEntity<Boolean> putUpdateOrder(@RequestBody Order updatedOrder) {
+    public ResponseEntity<Boolean> putUpdateOrder(@Valid @RequestBody Order updatedOrder) {
         return ResponseEntity.ok(orderService.update(updatedOrder));
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<Order>> getAllOrdersByUserId(@PathVariable int userId){
+        return ResponseEntity.ok(orderService.findAllById(userId));
     }
 }
