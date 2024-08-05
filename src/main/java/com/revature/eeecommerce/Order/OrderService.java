@@ -5,6 +5,7 @@ import com.revature.eeecommerce.util.interfaces.Serviceable;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -56,5 +57,15 @@ public class OrderService implements Serviceable<Order> {
         //TODO: validate?
         orderRepository.delete(order);
         return true;
+    }
+
+    //TODO: Verify that this works
+    public List<Order> findAllById(int userId) {
+        List<Order> orders = orderRepository.findAllById(userId);
+        if (orders.isEmpty()){
+            throw new DataNotFoundException("No orders with that userId was found");
+        } else {
+            return orders;
+        }
     }
 }

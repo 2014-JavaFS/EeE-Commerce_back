@@ -29,12 +29,17 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<Order> getOrderById(@PathVariable int id){
+    public ResponseEntity<Order> getOrderById(@PathVariable int id){
         return ResponseEntity.ok(orderService.findById(id));
     }
 
     @PutMapping
-    private ResponseEntity<Boolean> putUpdateOrder(@RequestBody Order updatedOrder) {
+    public ResponseEntity<Boolean> putUpdateOrder(@RequestBody Order updatedOrder) {
         return ResponseEntity.ok(orderService.update(updatedOrder));
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<Order>> getAllOrdersByUserId(@RequestBody int userId){
+        return ResponseEntity.ok(orderService.findAllById(userId));
     }
 }
