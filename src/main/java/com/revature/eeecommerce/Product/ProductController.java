@@ -22,7 +22,6 @@ public class ProductController {
     private ProductService productService;
 
     /**
-     *
      * @param productService - a service object to pass what we want to do through the Service layer
      */
     @Autowired
@@ -31,7 +30,6 @@ public class ProductController {
     }
 
     /**
-     *
      * @return - a list of all functions
      */
     @GetMapping
@@ -46,9 +44,8 @@ public class ProductController {
     }
 
     /**
-     *
      * @param id - the primary key we will use to find the product
-     * @return - a product
+     * @return - a product with the associated primary key
      */
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@Valid @PathVariable int id) {
@@ -56,10 +53,9 @@ public class ProductController {
     }
 
     /**
-     *
      * @param newProduct - a new product
      * @param userType - the user's enum type
-     * @return - a new product
+     * @return - a new product that the employees wants to sell
      */
     @PostMapping
     public ResponseEntity<Product> postNewProduct(@RequestBody Product newProduct, @RequestHeader String userType) {
@@ -71,7 +67,6 @@ public class ProductController {
     }
 
     /**
-     *
      * @param updatedProduct - a product we want to update
      * @param userType - the user's enum type
      * @return - true
@@ -92,7 +87,6 @@ public class ProductController {
     }
 
     /**
-     *
      * @param product_id - the primary key of a product we want to delete
      * @param userType - the user's enum type
      * @return - true

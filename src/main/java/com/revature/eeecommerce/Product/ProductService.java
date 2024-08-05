@@ -18,7 +18,6 @@ public class ProductService {
     private ProductRepository productRepository;
 
     /**
-     *
      * @param productRepository - gets the product repository so that we are able to perform our db functions
      */
     @Autowired
@@ -27,7 +26,6 @@ public class ProductService {
     }
 
     /**
-     *
      * @return - a list of all the products
      */
     public List<Product> getAllProducts() {
@@ -43,7 +41,6 @@ public class ProductService {
     }
 
     /**
-     *
      * @param product_id - our product's primary key
      * @return - a product
      */
@@ -53,7 +50,6 @@ public class ProductService {
     }
 
     /**
-     *
      * @param newProduct - a product object
      * @return - a brand new product
      */
@@ -62,7 +58,6 @@ public class ProductService {
     }
 
     /**
-     *
      * @param updateProduct - a product that exists
      * @return - true
      */
@@ -73,7 +68,6 @@ public class ProductService {
     }
 
     /**
-     *
      * @param product_id - the primary key of a product
      * @return - true
      */
