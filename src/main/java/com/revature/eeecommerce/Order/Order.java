@@ -24,5 +24,7 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name="timestamp", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp date;
 }

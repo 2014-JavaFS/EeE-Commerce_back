@@ -10,5 +10,5 @@ import java.util.List;
  */
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
-    List<Order> findAllById(int userId);
+    List<Order> findAllByUserUserId(int userId);
 }
