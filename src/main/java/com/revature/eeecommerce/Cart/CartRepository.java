@@ -12,21 +12,14 @@ import java.util.Optional;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Integer>{
+    List<Cart> findCartByUserUserId(int id);
 
-    @Query(value = "from Cart c where c.User.user_id = :id", nativeQuery = true)
-    List<Cart> findCartByUserId(int id);
-
-    @Query(value = "from Cart c where c.User.user_id = :id and c.Product = :product", nativeQuery = true)
-    Optional<Cart> findCartByUserAndProduct(int id, Product product);
+    Optional<Cart> findCartByUserUserIdAndProduct(int id, Product product);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update Cart c set c.count = c.count + :count where c.user = :user and c.product = :product")
     Cart updateCart(User user, Product product, int count);
 
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query(value = "delete from Cart c where c.User.user_id = :id", nativeQuery = true)
-    void deleteByUserId(int id);
-
-    @Query(value = "select sum(c.Product.price) from Cart c where c.User.user_id = :id", nativeQuery = true)
-    Integer getCartTotal(int id);
+//    @Query(value = "select sum(c.Product.price) from Cart c where c.User.user_id = :id", nativeQuery = true)
+//    Integer getCartTotal(int id);
 }

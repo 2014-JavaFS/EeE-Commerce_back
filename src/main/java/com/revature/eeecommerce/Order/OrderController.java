@@ -1,6 +1,8 @@
 package com.revature.eeecommerce.Order;
 
+import com.revature.eeecommerce.Cart.Cart;
 import com.revature.eeecommerce.Cart.CartService;
+import com.revature.eeecommerce.OrderItem.OrderItem;
 import com.revature.eeecommerce.OrderItem.OrderItemService;
 import com.revature.eeecommerce.util.exceptions.UnauthorizedException;
 import jakarta.validation.Valid;
@@ -32,7 +34,14 @@ public class OrderController {
     public ResponseEntity<Order> checkout(@Valid @RequestBody Order order, @RequestHeader String userType, @RequestHeader int userId){
         //TODO: check this if statement for correct logic
         if (!userType.equals("CUSTOMER")) throw new UnauthorizedException("You are not logged in as a customer!");
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.create(order));
+        List<Cart> totalCart = cartService.findCartByUserId(userId);
+        Order newOrder = orderService.create(order);
+        totalCart.forEach((cartItem) -> {
+            OrderItem newOrderItem = new OrderItem(cartItem, newOrder);
+            orderItemService.create(newOrderItem);
+            cartService.deleteCart(cartItem.getCartId());
+        });
+        return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
     }
 
     @GetMapping("/{id}")

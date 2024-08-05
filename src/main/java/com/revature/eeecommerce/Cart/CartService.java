@@ -19,7 +19,7 @@ public class CartService{
     }
 
     public List<Cart> findCartByUserId(int id) {
-        return cartRepository.findCartByUserId(id);
+        return cartRepository.findCartByUserUserId(id);
     }
 
     public Cart postCart(int id, Cart cart) {
@@ -32,22 +32,28 @@ public class CartService{
     }
 
     private Cart findCart(int id, Cart cart) {
-        Optional<Cart> cartOptional = cartRepository.findCartByUserAndProduct(id, cart.getProduct());
+        Optional<Cart> cartOptional = cartRepository.findCartByUserUserIdAndProduct(id, cart.getProduct());
         return cartOptional.orElse(null);
     }
 
-    @Transactional
-    public Integer deleteCartById(int userId) {
-        List<Cart> cartList = cartRepository.findCartByUserId(userId);
-        if(!cartList.isEmpty()) {
-            cartRepository.deleteByUserId(userId);
-            return 1;
-        } else {
-            return null;
-        }
+//    @Transactional
+//    public Integer deleteCartById(int userId) {
+//        List<Cart> cartList = cartRepository.findCartByUserUserId(userId);
+//        if(!cartList.isEmpty()) {
+//            cartRepository.deleteByUserId(userId);
+//            return 1;
+//        } else {
+//            return null;
+//        }
+//    }
+
+    public boolean deleteCart(int id) {
+        cartRepository.deleteById(id);
+
+        return true;
     }
 
-    public Integer getCartTotal(int userId) {
-        return cartRepository.getCartTotal(userId);
-    }
+//    public Integer getCartTotal(int userId) {
+//        return cartRepository.getCartTotal(userId);
+//    }
 }

@@ -28,7 +28,6 @@ public class OrderService implements Serviceable<Order> {
 
     @Override
     public Order create(Order order) {
-        //TODO: validate?
         return orderRepository.save(order);
     }
 

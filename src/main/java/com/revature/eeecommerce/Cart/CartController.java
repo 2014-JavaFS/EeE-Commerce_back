@@ -43,16 +43,16 @@ public class CartController {
 
     // delete by user id
     @DeleteMapping()
-    private ResponseEntity<Integer> deleteCart(@Valid @RequestHeader int userId) {
-        return ResponseEntity.status(HttpStatus.OK).body(cartService.deleteCartById(userId));
+    private ResponseEntity<Boolean> deleteCart(@Valid @RequestHeader int userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(cartService.deleteCart(userId));
     }
 
-    @GetMapping("/total")
-    private ResponseEntity<Integer> getCartTotal(@Valid @RequestHeader int userId){
-        if (userId == 0) {
-            throw new DataNotFoundException("This user does not exist or is not logged in");
-        } else {
-            return ResponseEntity.status(HttpStatus.OK).body(cartService.getCartTotal(userId));
-        }
-    }
+//    @GetMapping("/total")
+//    private ResponseEntity<Integer> getCartTotal(@Valid @RequestHeader int userId){
+//        if (userId == 0) {
+//            throw new DataNotFoundException("This user does not exist or is not logged in");
+//        } else {
+//            return ResponseEntity.status(HttpStatus.OK).body(cartService.getCartTotal(userId));
+//        }
+//    }
 }
