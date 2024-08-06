@@ -2,12 +2,13 @@ package com.revature.eeecommerce.Order;
 
 import com.revature.eeecommerce.User.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Reference;
 
-import java.sql.Timestamp;
+import java.sql.Time;
 
 @Data
 @NoArgsConstructor
@@ -23,6 +24,9 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @NotNull
     private User user;
-    private Timestamp date;
+
+    @NotNull
+    private Time date;
 }
