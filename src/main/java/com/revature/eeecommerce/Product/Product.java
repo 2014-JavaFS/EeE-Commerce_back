@@ -28,4 +28,6 @@ public class Product {
     private String description;
     @Column(nullable = false, columnDefinition = "integer default 0")
     private int quantity;
+    @Column(nullable = false)
+    private String image;
 }
