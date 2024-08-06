@@ -22,8 +22,8 @@ public class CartService{
         return cartRepository.findCartByUserUserId(id);
     }
 
-    public Cart postCart(int id, Cart cart) {
-        Cart dupe = findCart(id, cart);
+    public Cart postCart(Cart cart) {
+        Cart dupe = findCart(cart);
         if(dupe == null) {
             return cartRepository.save(cart);
         } else {
@@ -31,8 +31,8 @@ public class CartService{
         }
     }
 
-    private Cart findCart(int id, Cart cart) {
-        Optional<Cart> cartOptional = cartRepository.findCartByUserUserIdAndProduct(id, cart.getProduct());
+    private Cart findCart(Cart cart) {
+        Optional<Cart> cartOptional = cartRepository.findCartByUserUserIdAndProduct(cart.getUser().getUserId(), cart.getProduct());
         return cartOptional.orElse(null);
     }
 

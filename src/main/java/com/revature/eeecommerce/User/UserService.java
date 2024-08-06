@@ -1,5 +1,6 @@
 package com.revature.eeecommerce.User;
 
+import com.revature.eeecommerce.util.exceptions.DataNotFoundException;
 import org.hibernate.exception.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class UserService {
      * @return User object if found, else null and throws AuthException
      */
     public User findByEmailAndPassword(String email, String password) throws AuthenticationException {
-        return userRepository.findByEmailAndPassword(email, password).orElseThrow(() -> new AuthenticationException());
+        return userRepository.findByEmailAndPassword(email, password).orElseThrow(() -> new AuthenticationException("Incorrect email or password"));
     }
 
     public User create(User user) {
@@ -34,8 +35,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findById(int id)throws RuntimeException {
-        return userRepository.findByUserId(id).orElseThrow(() -> new RuntimeException("Nothing in the database with ID of " + id));
+    public User findById(int id)throws DataNotFoundException {
+        return userRepository.findByUserId(id).orElseThrow(() -> new DataNotFoundException("Nothing in the database with ID of " + id));
     }
 
     public boolean update(User user) {
