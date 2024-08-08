@@ -64,7 +64,6 @@ public class ProductControllerIntegrationTestSuite {
     @Test
     public void testUpdateProduct() throws Exception {
         when(productService.updateProduct(validProduct)).thenReturn(true);
-        //when(productService.findById(validProduct.getProduct_id())).thenReturn(Optional.of(validProduct));
 
         mockMvc.perform(MockMvcRequestBuilders.put("/products")
                 .header("userType", "EMPLOYEE")
