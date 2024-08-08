@@ -26,5 +26,4 @@ public class Cart {
     @Column(columnDefinition = "integer default 1 check (count > 0)")
     private int count;
 
-
 }

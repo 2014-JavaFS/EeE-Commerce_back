@@ -45,9 +45,7 @@ public class OrderController {
     public @ResponseBody List<Order> getAllOrders(){ return orderService.findAll(); }
 
     @PostMapping
-    public ResponseEntity<List<OrderItem>> checkout(@RequestHeader String userType, @RequestHeader int userId){
-        //TODO: check this if statement for correct logic
-        if (!userType.equals("CUSTOMER")) throw new UnauthorizedException("You are not logged in as a customer!");
+    public ResponseEntity<List<OrderItem>> checkout(@RequestHeader int userId){
         List<Cart> totalCart = cartService.findCartByUserId(userId);
         Order newOrder = new Order();
         newOrder.setUser(userService.findById(userId));
