@@ -43,16 +43,17 @@ public class OrderItemServiceTestSuite {
         assertEquals(validOrderItem, result.get(0));
     }
 
-//    @Test
-//    public void testGetOrderItemById() throws OrderItemNotFoundException {
-//        when(mockOrderItemRepository.findAllByOrderId(validOrderItem.getOrderItemId())).thenReturn(Optional.of(validOrderItem));
-//
-//        List<OrderItem> result = sut.findAllByOrderId(validOrderItem.getOrderItemId());
-//
-//        assertNotNull(result);
-//        assertEquals(validOrderItem, result);
-//        verify(mockOrderItemRepository, times(1)).findAllByOrderId(validOrderItem.getOrderItemId());
-//    }
+    @Test
+    public void testGetOrderItemByOrderId() throws OrderItemNotFoundException {
+        when(mockOrderItemRepository.findAllByOrderId(validOrderItem.getOrderItemId())).thenReturn(List.of(validOrderItem));
+
+        List<OrderItem> result = sut.findAllByOrderId(validOrderItem.getOrderItemId());
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(validOrderItem, result.get(0));
+        verify(mockOrderItemRepository, times(1)).findAllByOrderId(validOrderItem.getOrderItemId());
+    }
 
     @Test
     public void testCreateOrderItem() {
@@ -62,26 +63,36 @@ public class OrderItemServiceTestSuite {
         assertEquals(validOrderItem, result);
     }
 
-//    @Test
-//    public void testUpdateOrderItem() throws OrderItemNotFoundException {
-//        when(mockOrderItemRepository.findAllByOrderId(validOrderItem.getOrderItemId())).thenReturn(Optional.of(validOrderItem));
-//        when(mockOrderItemRepository.save(validOrderItem)).thenReturn(validOrderItem);
-//
-//        OrderItem result = sut.update(validOrderItem);
-//
-//        assertNotNull(result);
-//        assertEquals(validOrderItem.getOrderItemId(), result.getOrderItemId());
-//        assertEquals(validOrderItem.getCount(), result.getCount());
-//
-//        assertEquals(validOrderItem, result);
-//
-//        verify(mockOrderItemRepository, times(1)).save(validOrderItem);
-//        verify(mockOrderItemRepository, times(1)).findAllByOrderId(validOrderItem.getOrderItemId());
-//    }
+    @Test
+    public void testUpdateOrderItem() throws OrderItemNotFoundException {
+        when(mockOrderItemRepository.findById(validOrderItem.getOrderItemId())).thenReturn(Optional.ofNullable(validOrderItem));
+        when(mockOrderItemRepository.save(validOrderItem)).thenReturn(validOrderItem);
+
+        OrderItem result = sut.update(validOrderItem);
+
+        assertNotNull(result);
+        assertEquals(validOrderItem, result);
+
+        verify(mockOrderItemRepository, times(1)).save(validOrderItem);
+        verify(mockOrderItemRepository, times(1)).findById(validOrderItem.getOrderItemId());
+    }
 
     @Test
     public void testDeleteOrderItem() {
         assertTrue(sut.delete(validOrderItem.getOrderItemId()));
         verify(mockOrderItemRepository, times(1)).deleteById(validOrderItem.getOrderItemId());
+    }
+
+    @Test
+    public void testFindByOrderIdAndProductId() throws Exception{
+        when(mockOrderItemRepository.findByOrderIdAndProductId
+                (validOrderItem.getOrder().getOrderId(), validOrderItem.getProduct().getProduct_id()))
+        .thenReturn(validOrderItem);
+
+        OrderItem result = sut.findByOrderIdAndProductId
+                (validOrderItem.getOrder().getOrderId(), validOrderItem.getProduct().getProduct_id());
+
+        assertNotNull(result);
+        assertEquals(validOrderItem, result);
     }
 }
