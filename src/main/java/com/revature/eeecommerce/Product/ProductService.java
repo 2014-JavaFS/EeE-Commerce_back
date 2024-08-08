@@ -63,6 +63,10 @@ public class ProductService {
      */
     @Transactional
     public boolean updateProduct(Product updateProduct) {
+        if (updateProduct.getQuantity() < 0) {
+            return false;
+        }
+
         productRepository.save(updateProduct);
         return true;
     }

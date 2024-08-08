@@ -79,7 +79,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.update(updatedOrder));
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<Order>> getAllOrdersByUserId(@PathVariable int userId){
         return ResponseEntity.ok(orderService.findAllById(userId));
     }
