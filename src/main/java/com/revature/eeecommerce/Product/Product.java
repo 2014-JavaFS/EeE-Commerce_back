@@ -2,6 +2,7 @@ package com.revature.eeecommerce.Product;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,7 @@ public class Product {
     @Positive
     @Column(nullable = false)
     private int price;
-    @Positive
+    @PositiveOrZero
     private double discount;
     @Column(nullable = false)
     private String name;

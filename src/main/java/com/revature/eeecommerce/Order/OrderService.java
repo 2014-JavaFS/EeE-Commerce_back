@@ -41,12 +41,7 @@ public class OrderService implements Serviceable<Order> {
     @Transactional
     @Override
     public boolean update(Order orderToUpdate) {
-        //TODO: validate?
-        Order foundOrder = orderRepository.findById(orderToUpdate.getOrderId())
-                .orElseThrow(() -> new DataNotFoundException("No order with the ID of " + orderToUpdate.getOrderId()));
-        if (foundOrder == null){
-            throw new DataNotFoundException("Order with that ID is not in the database, please check again");
-        }
+        orderRepository.save(orderToUpdate);
         return true;
     }
 

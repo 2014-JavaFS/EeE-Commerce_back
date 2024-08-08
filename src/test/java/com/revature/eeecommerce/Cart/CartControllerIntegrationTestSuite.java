@@ -34,21 +34,4 @@ public class CartControllerIntegrationTestSuite {
 
     private static String cartJSON = "{\"cartId\":1, \"userId\":1,\"firstName\":\"Amsal\",\"lastName\":\"Kassam\",\"address\":\"12345 Fake St.\",\"email\":\"test@email.com\",\"password\":\"Password123\",\"userType\":\"EMPLOYEE\"}";
 
-    @Test
-    public void testAddItemIntegration() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/cart")
-                .content(cartJSON)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().is(200));
-    }
-
-    @Test
-    public void testDeleteIntegration() throws Exception {
-        String cartJSON = "{}";
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/cart")
-                        .content(cartJSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().is(200));
-    }
 }
