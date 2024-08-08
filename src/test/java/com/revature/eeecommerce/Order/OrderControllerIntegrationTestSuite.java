@@ -41,6 +41,8 @@ public class OrderControllerIntegrationTestSuite {
     private CartService cartService;
     @MockBean
     private OrderItemService orderItemService;
+    @MockBean
+    private ProductService productService;
 
     @Autowired
     private OrderController orderController;
@@ -71,6 +73,7 @@ public class OrderControllerIntegrationTestSuite {
         when(orderService.create(defaultOrder)).thenReturn(defaultOrder);
         when(orderItemService.create(any(OrderItem.class))).thenReturn(new OrderItem());
         when(cartService.deleteCart(anyInt())).thenReturn(true);
+        when(productService.updateProduct(any(Product.class))).thenReturn(true);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/orders")
                         .header("userId", 1))
