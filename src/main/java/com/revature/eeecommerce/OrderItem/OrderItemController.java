@@ -3,6 +3,7 @@ package com.revature.eeecommerce.OrderItem;
 import com.revature.eeecommerce.Order.Order;
 import com.revature.eeecommerce.OrderItem.dtos.OrderItemDTO;
 import com.revature.eeecommerce.Product.Product;
+import com.revature.eeecommerce.Product.ProductService;
 import com.revature.eeecommerce.util.exceptions.OrderItemNotFoundException;
 import com.revature.eeecommerce.util.exceptions.UnauthorizedException;
 import jakarta.validation.Valid;
@@ -18,11 +19,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/orderItems")
 public class OrderItemController {
     private final OrderItemService orderItemService;
+    private final ProductService productService;
 
     @Autowired
-    public OrderItemController(OrderItemService orderItemService) {
+    public OrderItemController(OrderItemService orderItemService, ProductService productService) {
         this.orderItemService = orderItemService;
-
+        this.productService = productService;
     }
 
     /*
@@ -31,6 +33,7 @@ public class OrderItemController {
      * @param postDTO - OrderItemDTO json object with an existing order_id and product_id
      * @return orderItemDTO - OrderItemDTO with only orderItemId, orderId, product_id and count instead of Order and Product objects in place of the id's
      */
+
     //DEPRECATED: use OrderController.checkout instead (POST /orders)
 //    @PostMapping
 //    private ResponseEntity<?> postNewOrderItem(@Valid @RequestBody OrderItemDTO postDTO, @RequestHeader String userType){
