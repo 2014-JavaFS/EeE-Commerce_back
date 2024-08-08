@@ -10,8 +10,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -27,24 +27,60 @@ public class ProductControllerIntegrationTestSuite {
     @Autowired
     private MockMvc mockMvc;
 
+    private static Product validProduct = new Product(1, 2599, 0.25, "tEst product", "test product shirt with a giant E", 200, "image:url");
+    private static String productJSON = "{\"product_id\":1,\"price\":2599,\"discount\":0.25,\"name\":\"tEst product\",\"description\":\"test product shirt with a giant E\",\"quantity\":200,\"image\":\"image:url\"}";
+
     @Test
     public void testGetAllProducts() throws Exception {
-//        List<Product> products = Arrays.asList(
-//                new Product(2, 2400, 0.2, "E Shirt", "Let everyone know you love the letter E", 200, "https://th.bing.com/th/id/OIG2.L4QTYfR6oNyS5Jq.QasC?w=270&h=270&c=6&r=0&o=5&pid=ImgGn")
-//        );
-//        when(productRepository.findAll()).thenReturn(products);
-//
-//        mockMvc.perform(MockMvcRequestBuilders.get("/products"))
-//                .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(products.size()))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$[0].product_id").value(products.get(0).getProduct_id()))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(products.get(0).getName()))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$[0].price").value(products.get(0).getPrice()))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$[1].product_id").value(products.get(1).getProduct_id()))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value(products.get(1).getName()))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$[1].price").value(products.get(1).getPrice()));
-//
-//        verify(productRepository, times(1)).findAll();
+        when(productService.getAllProducts()).thenReturn(List.of(validProduct));
+        String expectedResult = "[" + productJSON + "]";
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/products"))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.content().string(expectedResult));
+    }
+
+    @Test
+    public void testGetProductById() throws Exception {
+        when(productService.findById(1)).thenReturn(validProduct);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/products/1"))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.content().string(productJSON));
+    }
+
+    @Test
+    public void testCreateProduct() throws Exception {
+        when(productService.createProduct(validProduct)).thenReturn(validProduct);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/products")
+                .header("userType", "EMPLOYEE")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(productJSON))
+                .andExpect(MockMvcResultMatchers.status().is(201))
+                .andExpect(MockMvcResultMatchers.content().string(productJSON));
+    }
+
+    @Test
+    public void testUpdateProduct() throws Exception {
+        when(productService.updateProduct(validProduct)).thenReturn(true);
+        //when(productService.findById(validProduct.getProduct_id())).thenReturn(Optional.of(validProduct));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/products")
+                .header("userType", "EMPLOYEE")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(productJSON))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.content().string("true"));
+    }
+
+    @Test
+    public void testDeleteProduct() throws Exception {
+        when(productService.deleteProduct(1)).thenReturn(true);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/products/1")
+                .header("userType", "EMPLOYEE")
+                .contentType(productJSON))
+                .andExpect(MockMvcResultMatchers.status().is(200));
     }
 }
