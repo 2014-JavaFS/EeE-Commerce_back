@@ -17,8 +17,10 @@ public interface CartRepository extends JpaRepository<Cart, Integer>{
     Optional<Cart> findCartByUserUserIdAndProduct(int id, Product product);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("update Cart c set c.count = c.count + :count where c.user = :user and c.product = :product")
-    Cart updateCart(User user, Product product, int count);
+    @Query("update Cart c set c.count = :count where c.user = :user and c.product = :product")
+    void updateCart(User user, Product product, int count);
+
+    void deleteByUserUserId(int id);
 
 //    @Query(value = "select sum(c.Product.price) from Cart c where c.User.user_id = :id", nativeQuery = true)
 //    Integer getCartTotal(int id);

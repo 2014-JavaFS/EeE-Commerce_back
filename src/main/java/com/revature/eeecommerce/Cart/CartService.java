@@ -22,12 +22,21 @@ public class CartService{
         return cartRepository.findCartByUserUserId(id);
     }
 
+    @Transactional
     public Cart postCart(Cart cart) {
         Cart dupe = findCart(cart);
         if(dupe == null) {
             return cartRepository.save(cart);
         } else {
-            return cartRepository.updateCart(dupe.getUser(), dupe.getProduct(), dupe.getCount());
+            System.out.println(dupe.getCount());
+            System.out.println(cart.getCount());
+            if (dupe.getCount() + cart.getCount() > 0) {
+                cartRepository.updateCart(dupe.getUser(), dupe.getProduct(), dupe.getCount() + cart.getCount());
+            } else {
+                cartRepository.deleteById(dupe.getCartId());
+            }
+
+            return cart;
         }
     }
 
@@ -47,8 +56,9 @@ public class CartService{
 //        }
 //    }
 
+    @Transactional
     public boolean deleteCart(int id) {
-        cartRepository.deleteById(id);
+        cartRepository.deleteByUserUserId(id);
 
         return true;
     }
