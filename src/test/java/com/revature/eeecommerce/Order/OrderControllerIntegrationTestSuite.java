@@ -54,11 +54,10 @@ public class OrderControllerIntegrationTestSuite {
     private static Product defaultProduct = new Product(1, 100, 0.0, "testProduct", "", 100, "image:url");
 
     private static Order defaultOrder = new Order(1, defaultUser, now);
-    private static String orderJSON = "{\"orderId\":1,\"user\":"+userJSON+",\"date\":\""+now.toString()+"\"}";
+    private static String orderJSON = "{\"orderId\":1,\"user\":" + userJSON + ",\"date\":\"" + now.toString() + "\"}";
 
     @Test
     public void testFailCheckout() throws Exception {
-        String incorrectJSON = "{}";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/orders"))
                 .andExpect(MockMvcResultMatchers.status().is(400));
@@ -66,6 +65,7 @@ public class OrderControllerIntegrationTestSuite {
 
     @Test
     public void testSuccessCheckout() throws Exception {
+        String expectedJSON = "[{\"orderItemId\":0,\"order\":null,\"product\":{\"product_id\":1,\"price\":100,\"discount\":0.0,\"name\":\"testProduct\",\"description\":\"\",\"quantity\":99,\"image\":\"image:url\"},\"count\":1}]";
         when(cartService.findCartByUserId(1)).thenReturn(List.of(new Cart(1, defaultUser, defaultProduct, 1)));
         when(userService.findById(1)).thenReturn(defaultUser);
         when(orderService.create(defaultOrder)).thenReturn(defaultOrder);
@@ -73,9 +73,9 @@ public class OrderControllerIntegrationTestSuite {
         when(cartService.deleteCart(anyInt())).thenReturn(true);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/orders")
-                .header("userId", 1))
-                .andExpect(MockMvcResultMatchers.status().is(200))
-                .andExpect(MockMvcResultMatchers.content().string(orderJSON));
+                        .header("userId", 1))
+                .andExpect(MockMvcResultMatchers.status().is(201))
+                .andExpect(MockMvcResultMatchers.content().string(expectedJSON));
     }
 
     @Test
@@ -85,5 +85,33 @@ public class OrderControllerIntegrationTestSuite {
         mockMvc.perform(MockMvcRequestBuilders.get("/orders/1"))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.content().string(orderJSON));
+    }
+
+    @Test
+    public void testFindAllOrders() throws Exception {
+        when(orderService.findAll()).thenReturn(List.of(defaultOrder));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/orders"))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.content().string("[" + orderJSON + "]"));
+    }
+
+    @Test
+    public void testUpdateOrder() throws Exception {
+        when(orderService.update(defaultOrder)).thenReturn(true);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/orders")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(orderJSON))
+                .andExpect(MockMvcResultMatchers.status().is(200));
+    }
+
+    @Test
+    public void testGetOrdersByUserId() throws Exception {
+        when(orderService.findAllById(1)).thenReturn(List.of(defaultOrder));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/orders/user/1"))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.content().string("[" + orderJSON + "]"));
     }
 }
