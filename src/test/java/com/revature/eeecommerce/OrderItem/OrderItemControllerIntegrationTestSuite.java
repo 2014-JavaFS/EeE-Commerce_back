@@ -3,6 +3,7 @@ package com.revature.eeecommerce.OrderItem;
 import com.revature.eeecommerce.Order.Order;
 import com.revature.eeecommerce.Order.OrderRepository;
 import com.revature.eeecommerce.Order.OrderService;
+import com.revature.eeecommerce.OrderItem.dtos.OrderItemDTO;
 import com.revature.eeecommerce.Product.Product;
 import com.revature.eeecommerce.Product.ProductService;
 import com.revature.eeecommerce.User.User;
@@ -27,25 +28,10 @@ import static org.mockito.Mockito.when;
 @AutoConfigureMockMvc
 public class OrderItemControllerIntegrationTestSuite {
     @MockBean
-    private OrderItemRepository mockOrderItemRepository;
+    private OrderItemRepository mockRepo;
 
     @MockBean
-    private OrderItemService sut;
-
-    @MockBean
-    private OrderRepository orderRepository;
-
-    @MockBean
-    private OrderService orderService;
-
-    @MockBean
-    private OrderItemService orderItemService;
-
-    @MockBean
-    private ProductService productService;
-
-    @MockBean
-    private UserService userService;
+    private OrderItemService mockService;
 
     @Autowired
     private OrderItemController orderItemController;
@@ -62,7 +48,11 @@ public class OrderItemControllerIntegrationTestSuite {
     private static Order defaultOrder = new Order(1, defaultUser, now);
     private static String orderJSON = "{\"orderId\":1,\"user\":" + userJSON + ",\"date\":\"" + now.toString() + "\"}";
     private static OrderItem defaultOrderItem = new OrderItem(1, defaultOrder, defaultProduct, 1);
-    private static String orderItemJSON = "{\"orderItemId\":1,\"order\":" + orderJSON + ",\"product\":" + productJSON + "\"count\":1\"}";
+    private static String orderItemJSON = "{\"orderItemId\":1,\"order\":" + orderJSON + ",\"product\":" + productJSON + ",\"count\":1}";
+    private static String dtoJSON = "{\"orderItemId\":" + defaultOrderItem.getOrderItemId() +
+            ",\"orderId\":" + defaultOrderItem.getOrder().getOrderId() +
+            ",\"product_id\":" + defaultOrderItem.getProduct().getProduct_id() +
+            ",\"count\":" + defaultOrderItem.getCount() + "}";
 
 //    @Test
 //    public void testPostNewOrderItem() throws Exception {
@@ -77,23 +67,59 @@ public class OrderItemControllerIntegrationTestSuite {
 //        verify(sut, times(1)).save(any(OrderItem.class));
 //    }
 
+    public static OrderItemDTO mapToDTO(OrderItem orderItem) {
+        return new OrderItemDTO(
+                orderItem.getOrderItemId(),
+                orderItem.getOrder().getOrderId(),
+                orderItem.getProduct().getProduct_id(),
+                orderItem.getCount()
+        );
+    }
+
     @Test
     public void testGetAllOrderItems() throws Exception {
-        when(sut.findAll()).thenReturn(List.of(defaultOrderItem));
+        when(mockService.findAll()).thenReturn(List.of(defaultOrderItem));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/orderItems"))
                 .andExpect(MockMvcResultMatchers.status().is(200))
-                .andExpect(MockMvcResultMatchers.content().string("[" + orderItemJSON + "]"));
+                .andExpect(MockMvcResultMatchers.content().string("["+dtoJSON+"]"));
     }
 
     @Test
-    public void testGetOrderItem() {
+    public void testGetOrderItem() throws Exception{
+        when(mockService.findById(defaultOrderItem.getOrderItemId())).thenReturn(defaultOrderItem);
 
+        mockMvc.perform(MockMvcRequestBuilders.get("/orderItems/" + defaultOrderItem.getOrderItemId()))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.content().string(dtoJSON));
     }
 
     @Test
-    public void testGetAllByOrderId() {}
+    public void testGetAllByOrderId() throws Exception{
+        when(mockService.findAllByOrderId(defaultOrder.getOrderId())).thenReturn(List.of(defaultOrderItem));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/orderItems/order/" + defaultOrder.getOrderId()))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.content().string("["+dtoJSON+"]"));
+    }
 
     @Test
-    public void testDeleteOrderItem() {}
+    public void testDeleteOrderItem() throws Exception{
+        when(mockService.delete(defaultOrderItem.getOrderItemId())).thenReturn(true);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/orderItems/" + defaultOrderItem.getOrderItemId())
+                .header("userType", "EMPLOYEE"))
+                .andExpect(MockMvcResultMatchers.status().is(204));
+    }
+
+    @Test
+    public void testFindByOrderIdProductId() throws Exception{
+        when(mockService.findByOrderIdAndProductId(defaultOrder.getOrderId(), defaultProduct.getProduct_id()))
+                .thenReturn(defaultOrderItem);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/orderItems/" + defaultOrder.getOrderId() + "/" + defaultProduct.getProduct_id()))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.content().string(dtoJSON));
+    }
+
 }
