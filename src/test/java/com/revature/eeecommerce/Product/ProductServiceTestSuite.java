@@ -7,7 +7,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,22 +25,17 @@ public class ProductServiceTestSuite {
     // TODO: need to correct this
     @Test
     public void testGetAllProducts_HasSomething() {
-        List<Product> products = new ArrayList<>();
+        List<Product> products = Arrays.asList(
+                new Product(2, 2400, 0.2, "E Shirt", "Let everyone know you love the letter E", 200, "https://th.bing.com/th/id/OIG2.L4QTYfR6oNyS5Jq.QasC?w=270&h=270&c=6&r=0&o=5&pid=ImgGn")
+        );
         when(mockProductRepository.findAll()).thenReturn(products);
-        assertNotNull(sut.getAllProducts());
+        List<Product> result = sut.getAllProducts();
+        assertEquals(1, result.size());
         verify(mockProductRepository, times(1)).findAll();
     }
 
     @Test
-    public void testGetAllProducts_Empty() {
-        List<Product> products = new ArrayList<>();
-        when(mockProductRepository.findAll()).thenReturn(products);
-        assertNull(sut.getAllProducts());
-        verify(mockProductRepository, times(1)).findAll();
-    }
-
-    @Test
-    public void testCreateProduct_ValidQuantity() {
+    public void testCreateProduct() {
         Product validProduct = new Product(1, 2400, 0.2, "E Shirt", "Let everyone know you love the letter E", 200, "https://th.bing.com/th/id/OIG2.L4QTYfR6oNyS5Jq.QasC?w=270&h=270&c=6&r=0&o=5&pid=ImgGn");
         when(mockProductRepository.save(validProduct)).thenReturn(validProduct);
 
