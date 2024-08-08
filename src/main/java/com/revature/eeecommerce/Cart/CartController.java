@@ -54,11 +54,11 @@ public class CartController {
         }
     }
 
-    // delete by user id
-    @DeleteMapping()
-    private ResponseEntity<Boolean> deleteCart(@Valid @RequestHeader int userId) {
-        return ResponseEntity.status(HttpStatus.OK).body(cartService.deleteCart(userId));
-    }
+//    // delete by user id
+//    @DeleteMapping()
+//    private ResponseEntity<Boolean> deleteCart(@Valid @RequestHeader int userId) {
+//        return ResponseEntity.status(HttpStatus.OK).body(cartService.deleteCart(userId));
+//    }
 
 //    @GetMapping("/total")
 //    private ResponseEntity<Integer> getCartTotal(@Valid @RequestHeader int userId){

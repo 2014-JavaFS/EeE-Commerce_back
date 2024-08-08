@@ -3,6 +3,7 @@ package com.revature.eeecommerce.OrderItem;
 import com.revature.eeecommerce.Order.Order;
 import com.revature.eeecommerce.OrderItem.dtos.OrderItemDTO;
 import com.revature.eeecommerce.Product.Product;
+import com.revature.eeecommerce.Product.ProductService;
 import com.revature.eeecommerce.util.exceptions.OrderItemNotFoundException;
 import com.revature.eeecommerce.util.exceptions.UnauthorizedException;
 import jakarta.validation.Valid;
@@ -18,48 +19,51 @@ import java.util.stream.Collectors;
 @RequestMapping("/orderItems")
 public class OrderItemController {
     private final OrderItemService orderItemService;
+    private final ProductService productService;
 
     @Autowired
-    public OrderItemController(OrderItemService orderItemService) {
+    public OrderItemController(OrderItemService orderItemService, ProductService productService) {
         this.orderItemService = orderItemService;
-
+        this.productService = productService;
     }
 
-    /**
+    /*
      * Takes in an OrderItem as a json and returns a response with an OrderItemDTO object as the json response body.
      * Requires there to be an entry in the Order table and an entry in the Product table with the same order_id and product_id as in the request body.
      * @param postDTO - OrderItemDTO json object with an existing order_id and product_id
      * @return orderItemDTO - OrderItemDTO with only orderItemId, orderId, product_id and count instead of Order and Product objects in place of the id's
      */
-    @PostMapping
-    private ResponseEntity<?> postNewOrderItem(@Valid @RequestBody OrderItemDTO postDTO, @RequestHeader String userType){
-        try {
-            if (!userType.equals("EMPLOYEE")) {
-                throw new UnauthorizedException("You are not logged in as a Seller");
-            }
 
-            Order order = new Order();
-            order.setOrderId(postDTO.getOrderId());
-
-            Product product = new Product();
-            product.setProduct_id(postDTO.getProduct_id());
-
-            OrderItem newOrderItem = new OrderItem();
-            newOrderItem.setOrder(order);
-            newOrderItem.setProduct(product);
-            newOrderItem.setCount(postDTO.getCount());
-
-
-            newOrderItem = orderItemService.create(newOrderItem);
-            OrderItemDTO orderItemDTO = mapToDTO(newOrderItem);
-
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(orderItemDTO);
-        } catch(UnauthorizedException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
-    }
+    //DEPRECATED: use OrderController.checkout instead (POST /orders)
+//    @PostMapping
+//    private ResponseEntity<?> postNewOrderItem(@Valid @RequestBody OrderItemDTO postDTO, @RequestHeader String userType){
+//        try {
+//            if (!userType.equals("EMPLOYEE")) {
+//                throw new UnauthorizedException("You are not logged in as a Seller");
+//            }
+//
+//            Order order = new Order();
+//            order.setOrderId(postDTO.getOrderId());
+//
+//            Product product = new Product();
+//            product.setProduct_id(postDTO.getProduct_id());
+//
+//            OrderItem newOrderItem = new OrderItem();
+//            newOrderItem.setOrder(order);
+//            newOrderItem.setProduct(product);
+//            newOrderItem.setCount(postDTO.getCount());
+//
+//
+//            newOrderItem = orderItemService.create(newOrderItem);
+//            OrderItemDTO orderItemDTO = mapToDTO(newOrderItem);
+//
+//            return ResponseEntity
+//                    .status(HttpStatus.CREATED)
+//                    .body(orderItemDTO);
+//        } catch(UnauthorizedException e){
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+//        }
+//    }
 
     /**
      * Takes in an OrderItem object and returns an OrderItemDTO to simplify the response body with only relevant data.

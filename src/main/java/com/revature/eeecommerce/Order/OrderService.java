@@ -47,12 +47,10 @@ public class OrderService implements Serviceable<Order> {
 
     @Override
     public boolean delete(Order order) {
-        //TODO: validate?
         orderRepository.delete(order);
         return true;
     }
 
-    //TODO: Verify that this works
     public List<Order> findAllById(int userId) {
         List<Order> orders = orderRepository.findAllByUserUserId(userId);
         if (orders.isEmpty()){

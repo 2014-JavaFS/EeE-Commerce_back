@@ -33,10 +33,14 @@ public class OrderItem {
     @NotNull
     private int count;
 
+    @Column(columnDefinition = "float(53) default 0 check (discount >= 0)")
+    private double discount;
+
     public OrderItem(Cart cartItem, Order order) {
         this.order = order;
         this.product = cartItem.getProduct();
         this.count = cartItem.getCount();
+        this.discount = cartItem.getProduct().getDiscount();
     }
 
 }
