@@ -50,22 +50,23 @@ public class CartController {
             newCart.setProduct(productService.findById(productId));
             newCart.setUser(userService.findById(userId));
             newCart.setCount(quantity);
-            return ResponseEntity.status(HttpStatus.OK).body(cartService.postCart(newCart));
+            newCart = cartService.postCart(newCart);
+            return ResponseEntity.status(HttpStatus.OK).body(newCart);
         }
     }
 
-//    // delete by user id
-//    @DeleteMapping()
-//    private ResponseEntity<Boolean> deleteCart(@Valid @RequestHeader int userId) {
-//        return ResponseEntity.status(HttpStatus.OK).body(cartService.deleteCart(userId));
-//    }
+    // delete by user id
+    @DeleteMapping("/{cartId}")
+    private ResponseEntity<Boolean> deleteCart(@Valid @PathVariable int cartId) {
+        return ResponseEntity.status(HttpStatus.OK).body(cartService.deleteCart(cartId));
+    }
 
 //    @GetMapping("/total")
-//    private ResponseEntity<Integer> getCartTotal(@Valid @RequestHeader int userId){
+//    private ResponseEntity<Void> getCartTotal(@Valid @RequestHeader int userId){
 //        if (userId == 0) {
 //            throw new DataNotFoundException("This user does not exist or is not logged in");
 //        } else {
-//            return ResponseEntity.status(HttpStatus.OK).body(cartService.getCartTotal(userId));
+//            return ResponseEntity.noContent().build();
 //        }
 //    }
 }

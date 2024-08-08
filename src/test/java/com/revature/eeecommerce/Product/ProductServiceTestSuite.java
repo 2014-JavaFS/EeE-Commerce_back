@@ -23,7 +23,7 @@ public class ProductServiceTestSuite {
     private ProductService sut;
 
     @Test
-    public void testGetAllProducts_HasSomething() {
+    public void testGetAllProducts() {
         List<Product> products = Arrays.asList(
                 new Product(2, 2400, 0.2, "E Shirt", "Let everyone know you love the letter E", 200, "https://th.bing.com/th/id/OIG2.L4QTYfR6oNyS5Jq.QasC?w=270&h=270&c=6&r=0&o=5&pid=ImgGn")
         );
@@ -31,6 +31,26 @@ public class ProductServiceTestSuite {
         List<Product> result = sut.getAllProducts();
         assertEquals(1, result.size());
         verify(mockProductRepository, times(1)).findAll();
+    }
+
+    @Test
+    public void testGetProductById() {
+        Product products = new Product(2, 2400, 0.2, "E Shirt", "Let everyone know you love the letter E", 200, "https://th.bing.com/th/id/OIG2.L4QTYfR6oNyS5Jq.QasC?w=270&h=270&c=6&r=0&o=5&pid=ImgGn");
+        when(mockProductRepository.findById(products.getProduct_id())).thenReturn(Optional.of(products));
+
+        Product result = sut.findById(products.getProduct_id());
+
+        // Verify that all parameters are not null
+        assertNotNull(result);
+        assertEquals(products.getProduct_id(), result.getProduct_id());
+        assertEquals(products.getName(), result.getName());
+        assertEquals(products.getPrice(), result.getPrice());
+        assertEquals(products.getDescription(), result.getDescription());
+        assertEquals(products.getQuantity(), result.getQuantity());
+        assertEquals(products.getImage(), result.getImage());
+        assertEquals(products, result);
+
+        verify(mockProductRepository, times(1)).findById(products.getProduct_id());
     }
 
     @Test

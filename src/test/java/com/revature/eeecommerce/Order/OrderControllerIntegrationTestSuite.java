@@ -67,7 +67,7 @@ public class OrderControllerIntegrationTestSuite {
 
     @Test
     public void testSuccessCheckout() throws Exception {
-        String expectedJSON = "[{\"orderItemId\":0,\"order\":null,\"product\":{\"product_id\":1,\"price\":100,\"discount\":0.0,\"name\":\"testProduct\",\"description\":\"\",\"quantity\":99,\"image\":\"image:url\"},\"count\":1}]";
+        String expectedJSON = "[{\"orderItemId\":0,\"order\":null,\"product\":{\"product_id\":1,\"price\":100,\"discount\":0.0,\"name\":\"testProduct\",\"description\":\"\",\"quantity\":99,\"image\":\"image:url\"},\"count\":1,\"discount\":0.0}]";
         when(cartService.findCartByUserId(1)).thenReturn(List.of(new Cart(1, defaultUser, defaultProduct, 1)));
         when(userService.findById(1)).thenReturn(defaultUser);
         when(orderService.create(defaultOrder)).thenReturn(defaultOrder);

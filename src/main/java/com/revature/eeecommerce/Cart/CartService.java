@@ -28,8 +28,6 @@ public class CartService{
         if(dupe == null) {
             return cartRepository.save(cart);
         } else {
-            System.out.println(dupe.getCount());
-            System.out.println(cart.getCount());
             if (dupe.getCount() + cart.getCount() > 0) {
                 cartRepository.updateCart(dupe.getUser(), dupe.getProduct(), dupe.getCount() + cart.getCount());
             } else {
@@ -58,7 +56,7 @@ public class CartService{
 
     @Transactional
     public boolean deleteCart(int id) {
-        cartRepository.deleteByUserUserId(id);
+        cartRepository.deleteById(id);
 
         return true;
     }
