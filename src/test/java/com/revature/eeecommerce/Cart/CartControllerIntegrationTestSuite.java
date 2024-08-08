@@ -26,22 +26,23 @@ public class CartControllerIntegrationTestSuite {
     private MockMvc mockMvc;
 
     @Test
-    public void testAddItemIntegration() throws Exception {
+    public void testFailAddItemIntegration() throws Exception {
         String cartJSON = "{}";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/cart")
                 .content(cartJSON)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().is(200));
+                .contentType(MediaType.APPLICATION_JSON)
+                        .header("userId", 1))
+                .andExpect(MockMvcResultMatchers.status().is(400));
     }
 
     @Test
-    public void testDeleteIntegration() throws Exception {
+    public void testFailDeleteIntegration() throws Exception {
         String cartJSON = "{}";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/cart")
                         .content(cartJSON)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().is(200));
+                .andExpect(MockMvcResultMatchers.status().is(400));
     }
 }

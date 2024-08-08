@@ -1,6 +1,13 @@
 package com.revature.eeecommerce.Order;
 
+import com.revature.eeecommerce.Cart.Cart;
+import com.revature.eeecommerce.Cart.CartService;
+import com.revature.eeecommerce.OrderItem.OrderItem;
+import com.revature.eeecommerce.OrderItem.OrderItemService;
+import com.revature.eeecommerce.Product.Product;
+import com.revature.eeecommerce.Product.ProductService;
 import com.revature.eeecommerce.User.User;
+import com.revature.eeecommerce.User.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,8 +19,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.sql.Time;
+import java.time.LocalTime;
+import java.util.List;
 
 import static com.revature.eeecommerce.User.User.userType.CUSTOMER;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -24,6 +35,12 @@ public class OrderControllerIntegrationTestSuite {
 
     @MockBean
     private OrderService orderService;
+    @MockBean
+    private UserService userService;
+    @MockBean
+    private CartService cartService;
+    @MockBean
+    private OrderItemService orderItemService;
 
     @Autowired
     private OrderController orderController;
@@ -31,13 +48,42 @@ public class OrderControllerIntegrationTestSuite {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
-    public void testCheckout() throws Exception {
-        String orderJSON = "{}";
+    private static Time now = Time.valueOf(LocalTime.now());
+    private static User defaultUser = new User(1, "Amsal", "Kassam", "12345 Fake St.", "test@email.com", "Password123", User.userType.EMPLOYEE);
+    private static String userJSON = "{\"userId\":1,\"firstName\":\"Amsal\",\"lastName\":\"Kassam\",\"address\":\"12345 Fake St.\",\"email\":\"test@email.com\",\"password\":\"Password123\",\"userType\":\"EMPLOYEE\"}";
+    private static Product defaultProduct = new Product(1, 100, 0.0, "testProduct", "", 100, "image:url");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("orders")
-                .content(orderJSON)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().is(200));
+    private static Order defaultOrder = new Order(1, defaultUser, now);
+    private static String orderJSON = "{\"orderId\":1,\"user\":"+userJSON+",\"date\":\""+now.toString()+"\"}";
+
+    @Test
+    public void testFailCheckout() throws Exception {
+        String incorrectJSON = "{}";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/orders"))
+                .andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+    @Test
+    public void testSuccessCheckout() throws Exception {
+        when(cartService.findCartByUserId(1)).thenReturn(List.of(new Cart(1, defaultUser, defaultProduct, 1)));
+        when(userService.findById(1)).thenReturn(defaultUser);
+        when(orderService.create(defaultOrder)).thenReturn(defaultOrder);
+        when(orderItemService.create(any(OrderItem.class))).thenReturn(new OrderItem());
+        when(cartService.deleteCart(anyInt())).thenReturn(true);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/orders")
+                .header("userId", 1))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.content().string(orderJSON));
+    }
+
+    @Test
+    public void testFindOrder() throws Exception {
+        when(orderService.findById(1)).thenReturn(defaultOrder);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/orders/1"))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.content().string(orderJSON));
     }
 }
