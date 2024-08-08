@@ -1,6 +1,8 @@
 package com.revature.eeecommerce.Product;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,12 +22,17 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int product_id;
+    @Positive
     @Column(nullable = false)
     private int price;
+    @PositiveOrZero
     private double discount;
     @Column(nullable = false)
     private String name;
     private String description;
+    @Positive
     @Column(nullable = false, columnDefinition = "integer default 0")
     private int quantity;
+    @Column(nullable = false)
+    private String image;
 }

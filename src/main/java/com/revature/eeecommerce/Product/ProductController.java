@@ -21,13 +21,17 @@ import java.util.List;
 public class ProductController {
     private ProductService productService;
 
+    /**
+     * @param productService - a service object to pass what we want to do through the Service layer
+     */
     @Autowired
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
-    // remove products
-
+    /**
+     * @return - a list of all functions
+     */
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
@@ -39,11 +43,20 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
+    /**
+     * @param id - the primary key we will use to find the product
+     * @return - a product with the associated primary key
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@Valid @PathVariable int id) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.findById(id));
     }
 
+    /**
+     * @param newProduct - a new product
+     * @param userType - the user's enum type
+     * @return - a new product that the employees wants to sell
+     */
     @PostMapping
     public ResponseEntity<Product> postNewProduct(@RequestBody Product newProduct, @RequestHeader String userType) {
         if (!userType.equals("EMPLOYEE")) {
@@ -53,8 +66,13 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(newProduct));
     }
 
-    @PatchMapping
-    public ResponseEntity<Boolean> patchUpdateProduct(@Valid @RequestBody Product updatedProduct, @RequestHeader String userType) {
+    /**
+     * @param updatedProduct - a product we want to update
+     * @param userType - the user's enum type
+     * @return - true
+     */
+    @PutMapping
+    public ResponseEntity<Boolean> putUpdateProduct(@Valid @RequestBody Product updatedProduct, @RequestHeader String userType) {
         if (!userType.equals("EMPLOYEE")) {
             throw new UnauthorizedException("You are not logged in as a Seller");
         }
@@ -68,17 +86,18 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(true);
     }
 
-    public ResponseEntity<Boolean> deleteProduct(@Valid @RequestBody Product deletedProduct, @RequestHeader String userType) {
+    /**
+     * @param product_id - the primary key of a product we want to delete
+     * @param userType - the user's enum type
+     * @return - true
+     */
+    @DeleteMapping("/{product_id}")
+    public ResponseEntity<Boolean> deleteProduct(@PathVariable int product_id, @RequestHeader String userType) {
         if (!userType.equals("EMPLOYEE")) {
             throw new UnauthorizedException("You are not logged in as a Seller");
         }
 
-        boolean deleteProduct = productService.deleteProduct(deletedProduct);
-
-        if (deleteProduct == false) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
-        }
-
+        productService.deleteProduct(product_id);
         return ResponseEntity.status(HttpStatus.OK).body(true);
     }
 }

@@ -19,35 +19,49 @@ public class CartService{
     }
 
     public List<Cart> findCartByUserId(int id) {
-        return cartRepository.findCartByUserId(id);
-    }
-
-    public Cart postCart(int id, Cart cart) {
-        Cart dupe = findCart(id, cart);
-        if(dupe == null) {
-            return cartRepository.save(cart);
-        } else {
-            return cartRepository.updateCart(dupe.getUser(), dupe.getProduct(), dupe.getCount());
-        }
-    }
-
-    private Cart findCart(int id, Cart cart) {
-        Optional<Cart> cartOptional = cartRepository.findCartByUserAndProduct(id, cart.getProduct());
-        return cartOptional.orElse(null);
+        return cartRepository.findCartByUserUserId(id);
     }
 
     @Transactional
-    public Integer deleteCartById(int userId) {
-        List<Cart> cartList = cartRepository.findCartByUserId(userId);
-        if(!cartList.isEmpty()) {
-            cartRepository.deleteByUserId(userId);
-            return 1;
+    public Cart postCart(Cart cart) {
+        Cart dupe = findCart(cart);
+        if(dupe == null) {
+            return cartRepository.save(cart);
         } else {
-            return null;
+            if (dupe.getCount() + cart.getCount() > 0) {
+                cartRepository.updateCart(dupe.getUser(), dupe.getProduct(), dupe.getCount() + cart.getCount());
+            } else {
+                cartRepository.deleteById(dupe.getCartId());
+            }
+
+            return cart;
         }
     }
 
-    public Integer getCartTotal(int userId) {
-        return cartRepository.getCartTotal(userId);
+    private Cart findCart(Cart cart) {
+        Optional<Cart> cartOptional = cartRepository.findCartByUserUserIdAndProduct(cart.getUser().getUserId(), cart.getProduct());
+        return cartOptional.orElse(null);
     }
+
+//    @Transactional
+//    public Integer deleteCartById(int userId) {
+//        List<Cart> cartList = cartRepository.findCartByUserUserId(userId);
+//        if(!cartList.isEmpty()) {
+//            cartRepository.deleteByUserId(userId);
+//            return 1;
+//        } else {
+//            return null;
+//        }
+//    }
+
+    @Transactional
+    public boolean deleteCart(int id) {
+        cartRepository.deleteById(id);
+
+        return true;
+    }
+
+//    public Integer getCartTotal(int userId) {
+//        return cartRepository.getCartTotal(userId);
+//    }
 }

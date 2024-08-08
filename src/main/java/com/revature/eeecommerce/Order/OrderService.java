@@ -28,7 +28,6 @@ public class OrderService implements Serviceable<Order> {
 
     @Override
     public Order create(Order order) {
-        //TODO: validate?
         return orderRepository.save(order);
     }
 
@@ -42,19 +41,22 @@ public class OrderService implements Serviceable<Order> {
     @Transactional
     @Override
     public boolean update(Order orderToUpdate) {
-        //TODO: validate?
-        Order foundOrder = orderRepository.findById(orderToUpdate.getOrderId())
-                .orElseThrow(() -> new DataNotFoundException("No order with the ID of " + orderToUpdate.getOrderId()));
-        if (foundOrder == null){
-            throw new DataNotFoundException("Order with that ID is not in the database, please check again");
-        }
+        orderRepository.save(orderToUpdate);
         return true;
     }
 
     @Override
     public boolean delete(Order order) {
-        //TODO: validate?
         orderRepository.delete(order);
         return true;
+    }
+
+    public List<Order> findAllById(int userId) {
+        List<Order> orders = orderRepository.findAllByUserUserId(userId);
+        if (orders.isEmpty()){
+            throw new DataNotFoundException("No orders with that userId was found");
+        } else {
+            return orders;
+        }
     }
 }
