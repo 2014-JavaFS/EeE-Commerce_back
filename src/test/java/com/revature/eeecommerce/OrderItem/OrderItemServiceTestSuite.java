@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.revature.eeecommerce.User.User.userType.CUSTOMER;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,7 +43,16 @@ public class OrderItemServiceTestSuite {
         assertEquals(validOrderItem, result.get(0));
     }
 
-
+//    @Test
+//    public void testGetOrderItemById() throws OrderItemNotFoundException {
+//        when(mockOrderItemRepository.findAllByOrderId(validOrderItem.getOrderItemId())).thenReturn(Optional.of(validOrderItem));
+//
+//        List<OrderItem> result = sut.findAllByOrderId(validOrderItem.getOrderItemId());
+//
+//        assertNotNull(result);
+//        assertEquals(validOrderItem, result);
+//        verify(mockOrderItemRepository, times(1)).findAllByOrderId(validOrderItem.getOrderItemId());
+//    }
 
     @Test
     public void testCreateOrderItem() {
@@ -53,6 +61,23 @@ public class OrderItemServiceTestSuite {
         OrderItem result = sut.create(validOrderItem);
         assertEquals(validOrderItem, result);
     }
+
+//    @Test
+//    public void testUpdateOrderItem() throws OrderItemNotFoundException {
+//        when(mockOrderItemRepository.findAllByOrderId(validOrderItem.getOrderItemId())).thenReturn(Optional.of(validOrderItem));
+//        when(mockOrderItemRepository.save(validOrderItem)).thenReturn(validOrderItem);
+//
+//        OrderItem result = sut.update(validOrderItem);
+//
+//        assertNotNull(result);
+//        assertEquals(validOrderItem.getOrderItemId(), result.getOrderItemId());
+//        assertEquals(validOrderItem.getCount(), result.getCount());
+//
+//        assertEquals(validOrderItem, result);
+//
+//        verify(mockOrderItemRepository, times(1)).save(validOrderItem);
+//        verify(mockOrderItemRepository, times(1)).findAllByOrderId(validOrderItem.getOrderItemId());
+//    }
 
     @Test
     public void testDeleteOrderItem() {
