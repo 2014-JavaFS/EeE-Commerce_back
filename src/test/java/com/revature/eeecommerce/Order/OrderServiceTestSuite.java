@@ -19,28 +19,4 @@ public class OrderServiceTestSuite {
 
     @InjectMocks // injects our ProductRepository into our ProductService as a mocked object
     private OrderService sut;
-
-    @Test
-    void findAll() {
-    }
-
-    @Test
-    void create() {
-    }
-
-    @Test
-    void findById() {
-    }
-
-    @Test
-    void update() {
-    }
-
-    @Test
-    void delete() {
-    }
-
-    @Test
-    void findAllById() {
-    }
 }

@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.sql.Time;
 
@@ -29,8 +32,12 @@ public class OrderControllerIntegrationTestSuite {
     private MockMvc mockMvc;
 
     @Test
-    public void testCheckout() {
-        Order validOrder = new Order(1, new User(4, "Donkey", "Kong", "One Hacker Way", "dkong@mariobros.com", "Pass435", CUSTOMER), Time.valueOf("14:36:28"));
+    public void testCheckout() throws Exception {
+        String orderJSON = "{}";
 
+        mockMvc.perform(MockMvcRequestBuilders.post("orders")
+                .content(orderJSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().is(200));
     }
 }

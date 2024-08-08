@@ -22,7 +22,6 @@ public class ProductServiceTestSuite {
     @InjectMocks // injects our ProductRepository into our ProductService as a mocked object
     private ProductService sut;
 
-    // TODO: need to correct this
     @Test
     public void testGetAllProducts_HasSomething() {
         List<Product> products = Arrays.asList(
