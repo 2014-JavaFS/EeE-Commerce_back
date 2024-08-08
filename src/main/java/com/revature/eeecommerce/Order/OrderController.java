@@ -4,6 +4,8 @@ import com.revature.eeecommerce.Cart.Cart;
 import com.revature.eeecommerce.Cart.CartService;
 import com.revature.eeecommerce.OrderItem.OrderItem;
 import com.revature.eeecommerce.OrderItem.OrderItemService;
+import com.revature.eeecommerce.Product.Product;
+import com.revature.eeecommerce.Product.ProductService;
 import com.revature.eeecommerce.User.UserService;
 import com.revature.eeecommerce.util.exceptions.UnauthorizedException;
 import jakarta.validation.Valid;
@@ -16,6 +18,7 @@ import java.sql.Time;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
@@ -27,22 +30,22 @@ public class OrderController {
     private final CartService cartService;
     private final OrderItemService orderItemService;
     private final UserService userService;
+    private final ProductService productService;
 
     @Autowired
-    public OrderController(OrderService orderService, CartService cartService, OrderItemService orderItemService, UserService userService) {
+    public OrderController(OrderService orderService, CartService cartService, OrderItemService orderItemService, UserService userService, ProductService productService) {
         this.orderService = orderService;
         this.cartService = cartService;
         this.orderItemService = orderItemService;
         this.userService = userService;
+        this.productService = productService;
     }
 
     @GetMapping
     public @ResponseBody List<Order> getAllOrders(){ return orderService.findAll(); }
 
     @PostMapping
-    public ResponseEntity<Order> checkout(@RequestHeader String userType, @RequestHeader int userId){
-        //TODO: check this if statement for correct logic
-        if (!userType.equals("CUSTOMER")) throw new UnauthorizedException("You are not logged in as a customer!");
+    public ResponseEntity<List<OrderItem>> checkout(@RequestHeader int userId){
         List<Cart> totalCart = cartService.findCartByUserId(userId);
         Order newOrder = new Order();
         newOrder.setUser(userService.findById(userId));
@@ -50,12 +53,20 @@ public class OrderController {
         newOrder = orderService.create(newOrder);
 
         Order finalNewOrder = newOrder; // copying variable to make java happy with using in lambda expr
+        List<OrderItem> orderedItems = new ArrayList<>();
         totalCart.forEach((cartItem) -> {
             OrderItem newOrderItem = new OrderItem(cartItem, finalNewOrder);
-            orderItemService.create(newOrderItem);
-            cartService.deleteCart(cartItem.getCartId());
+            Product product = newOrderItem.getProduct();
+            if(product.getQuantity() > newOrderItem.getCount()){
+                product.setQuantity(product.getQuantity() - newOrderItem.getCount());
+                productService.updateProduct(product);
+                orderItemService.create(newOrderItem);
+                cartService.deleteCart(cartItem.getCartId());
+                orderedItems.add(newOrderItem);
+            }
+
         });
-        return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderedItems);
     }
 
     @GetMapping("/{id}")
@@ -68,7 +79,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.update(updatedOrder));
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<Order>> getAllOrdersByUserId(@PathVariable int userId){
         return ResponseEntity.ok(orderService.findAllById(userId));
     }
