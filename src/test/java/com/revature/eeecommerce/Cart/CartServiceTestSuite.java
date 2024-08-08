@@ -60,6 +60,8 @@ public class CartServiceTestSuite {
 
     @Test
     public void testDeleteCart() {
+        when(mockCartRepository.save(validCart)).thenReturn(validCart);
+
         boolean actual = sut.deleteCart(validCart.getCartId());
         assertTrue(actual);
         verify(mockCartRepository, times(1)).deleteById(1);

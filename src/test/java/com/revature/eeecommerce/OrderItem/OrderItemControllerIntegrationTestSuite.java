@@ -47,7 +47,7 @@ public class OrderItemControllerIntegrationTestSuite {
     private static Product defaultProduct = new Product(1, 100, 0.0, "testProduct", "", 100, "image:url");
     private static Order defaultOrder = new Order(1, defaultUser, now);
     private static String orderJSON = "{\"orderId\":1,\"user\":" + userJSON + ",\"date\":\"" + now.toString() + "\"}";
-    private static OrderItem defaultOrderItem = new OrderItem(1, defaultOrder, defaultProduct, 1);
+    private static OrderItem defaultOrderItem = new OrderItem(1, defaultOrder, defaultProduct, 1, 0);
     private static String orderItemJSON = "{\"orderItemId\":1,\"order\":" + orderJSON + ",\"product\":" + productJSON + ",\"count\":1}";
     private static String dtoJSON = "{\"orderItemId\":" + defaultOrderItem.getOrderItemId() +
             ",\"orderId\":" + defaultOrderItem.getOrder().getOrderId() +

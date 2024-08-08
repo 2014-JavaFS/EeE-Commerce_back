@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.List;
 
 import static com.revature.eeecommerce.User.User.userType.CUSTOMER;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -52,20 +53,20 @@ public class CartControllerIntegrationTestSuite {
 
     @Test
     public void testGetCartByUserId() throws Exception {
-        when(cartService.findCartByUserId(1)).thenReturn(List.of(defaultCart));
+        when(cartService.findCartByUserId(2)).thenReturn(List.of(defaultCart));
         String expectedResult = cartJSON;
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cart")
                 .header("userId", defaultUser.getUserId())
-                .header("userType", defaultUser.getUserType()))
+                .header("userType", defaultUser.getUserType().name()))
                 .andExpect(MockMvcResultMatchers.status().is(200))
-                .andExpect(MockMvcResultMatchers.content().string(expectedResult));
+                .andExpect(MockMvcResultMatchers.content().string("[" + expectedResult + "]"));
     }
 
     @Test
     public void testPostCart() throws Exception {
         String expectedJSON = cartJSON;
-        when(cartService.postCart(defaultCart)).thenReturn(defaultCart);
+        when(cartService.postCart(any(Cart.class))).thenReturn(defaultCart);
         when(userService.findById(defaultUser.getUserId())).thenReturn(defaultUser);
         when(productService.findById(defaultProduct.getProduct_id())).thenReturn(defaultProduct);
 
@@ -77,10 +78,9 @@ public class CartControllerIntegrationTestSuite {
 
     @Test
     public void testDeleteCart() throws Exception {
-        when(cartService.deleteCart(1)).thenReturn(true);
+        when(cartService.deleteCart(defaultCart.getCartId())).thenReturn(true);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/cart")
-                .header("userId", defaultUser.getUserId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/cart/" + defaultCart.getCartId()))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
