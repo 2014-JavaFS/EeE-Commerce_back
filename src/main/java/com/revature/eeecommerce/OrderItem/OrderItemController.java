@@ -162,7 +162,7 @@ public class OrderItemController {
         }
     }
 
-    /**
+    /*
      * Updates the order-item entry with the corresponding order_item_id with the values present in the request body and
      * returns the updated orderItem as an OrderItemDTO, or throws an exception if logged-in user is not an employee
      * or the order-item entry was not found.
@@ -173,43 +173,43 @@ public class OrderItemController {
      * @throws UnauthorizedException - thrown if userType is not 'EMPLOYEE'.
      * @throws OrderItemNotFoundException - thrown if no order-item entry found with the corresponding order_item_id.
      */
-    @PatchMapping("/{orderItemId}")
-    private ResponseEntity<?> patchUpdateOrderItem(@Valid @RequestBody OrderItemDTO patchDTO, @PathVariable int orderItemId, @RequestHeader String userType) throws UnauthorizedException {
-        // replacing values in the existing orderItem with any values included in the PATCH request
-        try {
-            if (!userType.equals("EMPLOYEE")) {
-                throw new UnauthorizedException("You are not logged in as a Seller");
-            }
-
-            OrderItem existingOrderItem = orderItemService.findById(orderItemId);
-            if(patchDTO.getOrderId() != null) {
-                Order order = new Order();
-                order.setOrderId(patchDTO.getOrderId());
-                existingOrderItem.setOrder(order);
-            }
-
-            if(patchDTO.getProduct_id() != null) {
-                Product product = new Product();
-                product.setProduct_id(patchDTO.getProduct_id());
-                existingOrderItem.setProduct(product);
-            }
-
-            if(patchDTO.getCount() != null) {
-                existingOrderItem.setCount(patchDTO.getCount());
-            }
-
-            OrderItem updatedOrderItem = orderItemService.update(existingOrderItem);
-
-            // formatting updated orderItem into an orderItemDTO to only include orderId and product_id instead of an Order and Product
-            OrderItemDTO orderItemDTO = mapToDTO(updatedOrderItem);
-
-            return ResponseEntity.ok(orderItemDTO);
-        } catch(OrderItemNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch(UnauthorizedException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
-    }
+//    @PatchMapping("/{orderItemId}")
+//    private ResponseEntity<?> patchUpdateOrderItem(@Valid @RequestBody OrderItemDTO patchDTO, @PathVariable int orderItemId, @RequestHeader String userType) throws UnauthorizedException {
+//        // replacing values in the existing orderItem with any values included in the PATCH request
+//        try {
+//            if (!userType.equals("EMPLOYEE")) {
+//                throw new UnauthorizedException("You are not logged in as a Seller");
+//            }
+//
+//            OrderItem existingOrderItem = orderItemService.findById(orderItemId);
+//            if(patchDTO.getOrderId() != null) {
+//                Order order = new Order();
+//                order.setOrderId(patchDTO.getOrderId());
+//                existingOrderItem.setOrder(order);
+//            }
+//
+//            if(patchDTO.getProduct_id() != null) {
+//                Product product = new Product();
+//                product.setProduct_id(patchDTO.getProduct_id());
+//                existingOrderItem.setProduct(product);
+//            }
+//
+//            if(patchDTO.getCount() != null) {
+//                existingOrderItem.setCount(patchDTO.getCount());
+//            }
+//
+//            OrderItem updatedOrderItem = orderItemService.update(existingOrderItem);
+//
+//            // formatting updated orderItem into an orderItemDTO to only include orderId and product_id instead of an Order and Product
+//            OrderItemDTO orderItemDTO = mapToDTO(updatedOrderItem);
+//
+//            return ResponseEntity.ok(orderItemDTO);
+//        } catch(OrderItemNotFoundException e){
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        } catch(UnauthorizedException e){
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+//        }
+//    }
 
 
 }
