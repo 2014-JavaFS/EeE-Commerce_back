@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.naming.AuthenticationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,63 +16,72 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTestSuite {
+public class UserServiceTestSuite{
     @Mock
-    private UserRepository mockRepo;
+    private UserRepository mockUserRepository;
 
     @InjectMocks
-    private UserService userService;
+    private UserService sut;
 
-    private static User defaultUser = new User(1, "Amsal", "Kassam", "12345 Fake St.", "test@email.com", "Password123", User.userType.EMPLOYEE);
+    private static User newUser = new User(6, "Naruto", "Uzumaki", "393 Hokage Drive", "naruto@mail.com", "narutopw", User.userType.CUSTOMER);
 
     @Test
-    public void testGetAllUsers() {
-        List<User> users = new ArrayList<>(Arrays.asList(defaultUser));
-        when(mockRepo.findAll()).thenReturn(users);
-
-        List<User> result = userService.findAll();
+    public void testFindAll(){
+        List<User> users = Arrays.asList(newUser);
+        when(mockUserRepository.findAll())
+                .thenReturn(users);
+        List<User> result = sut.findAll();
         assertEquals(1, result.size());
-        assertEquals(defaultUser, result.get(0));
+        verify(mockUserRepository, times(1)).findAll();
     }
 
     @Test
-    public void testGetUserById() {
-        when(mockRepo.findByUserId(defaultUser.getUserId())).thenReturn(Optional.ofNullable(defaultUser));
-
-        User result = userService.findById(defaultUser.getUserId());
-        assertEquals(defaultUser, result);
-    }
-
-    @Test
-    public void testGetUserByLoginInfo() {
-        when(mockRepo.findByEmailAndPassword(defaultUser.getEmail(), defaultUser.getPassword()))
-                .thenReturn(Optional.ofNullable(defaultUser));
+    public void testFindByEmailAndPassword() {
+        when(mockUserRepository.findByEmailAndPassword(newUser.getEmail(), newUser.getPassword()))
+                .thenReturn(Optional.of(newUser));
 
         final User[] result = new User[1];
         assertDoesNotThrow(() -> {
-            result[0] = userService.findByEmailAndPassword(defaultUser.getEmail(), defaultUser.getPassword());
+            result[0] = sut.findByEmailAndPassword(newUser.getEmail(), newUser.getPassword());
         });
-        assertEquals(defaultUser, result[0]);
+
+
+        assertEquals(newUser, result[0]);
+
+        verify(mockUserRepository, times(1)).findByEmailAndPassword(newUser.getEmail(), newUser.getPassword());
+
     }
 
     @Test
-    public void testCreateUser() {
-        when(mockRepo.save(defaultUser)).thenReturn(defaultUser);
-
-        User result = userService.create(defaultUser);
-        assertEquals(defaultUser, result);
+    public void testCreate(){
+        when(mockUserRepository.save(newUser)).thenReturn(newUser);
+        User result = sut.create(newUser);
+       assertEquals(newUser, result);
+        verify(mockUserRepository, times(1)).save(newUser);
     }
 
     @Test
-    public void testUpdateUser() {
-        when(mockRepo.save(defaultUser)).thenReturn(defaultUser);
+    public void testFindById(){
+        when(mockUserRepository.findByUserId(6)).thenReturn(Optional.of(newUser));
 
-        assertTrue(userService.update(defaultUser));
-        verify(mockRepo, times(1)).save(defaultUser);
+        User result = sut.findById(6);
+
+        assertEquals(newUser, result);
+        verify(mockUserRepository, times(1)).findByUserId(6);
     }
 
-    public void testDeleteUser() {
-        assertTrue(userService.delete(defaultUser.getUserId()));
-        verify(mockRepo, times(1)).deleteById(defaultUser.getUserId());
+    @Test
+    public void testUpdateUser(){
+        when(mockUserRepository.save(newUser)).thenReturn(newUser);
+
+        assertTrue(sut.update(newUser));
+        verify(mockUserRepository, times(1)).save(newUser);
+    }
+
+    @Test
+    public void testDeleteUser(){
+        assertTrue(sut.delete(newUser.getUserId()));
+        verify(mockUserRepository, times(1)).deleteById(newUser.getUserId());
     }
 }
+
